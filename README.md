@@ -1,5 +1,7 @@
 # LMSS - Legal Matter Specification Standard Entity Recognizer
 
+![LMSS Entity Recognizer](lmss_entity_recognizer.png)
+
 ## Quick Start
 
 ## Cloning the Repository
@@ -48,5 +50,6 @@ To get started with the LMSS - Legal Matter Specification Standard Entity Recogn
 
 ## Additional Information
 
+- Inspect endpoints at [http://localhost:8000/docs](http://localhost:8000/docs)
 - Ensure you have Docker installed on your machine.
 - For direct running, ensure you have Python and pip installed.

@@ -12,6 +12,7 @@ app = FastAPI(title="LMSS Entity Recognizer")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
+templates.env.cache = {}
 
 # Check for LMSS in app/LMSS.owl or download from Github
 ontology_url = "https://github.com/sali-legal/LMSS/blob/main/LMSS.owl"
