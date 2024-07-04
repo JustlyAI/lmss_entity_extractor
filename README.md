@@ -1,4 +1,4 @@
-# LMSS - Legal Matter Specification Standard Entity Recognizer
+# SALI-E - Legal Matter Specification Standard Entity Recognizer
 
 ![LMSS Entity Recognizer](lmss_entity_recognizer.png)
 
@@ -6,7 +6,7 @@
 
 ## Cloning the Repository
 
-To get started with the LMSS - Legal Matter Specification Standard Entity Recognizer, you need to clone the repository from GitHub. Follow the steps below:
+To get started with the SALI-E - Legal Matter Specification Standard Entity Recognizer, you need to clone the repository from GitHub. Follow the steps below:
 
 1. **Clone the repository**:
 
