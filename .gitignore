@@ -7,6 +7,7 @@ ignore/
 .vscode/
 .pytest_cache/
 *__pycache__/*
+app/__pycache__/*
 
 .cursorrules
 .cursorignore
