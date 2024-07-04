@@ -1,0 +1,12 @@
+version: "3.10"
+
+services:
+  lmss_entity_recognizer:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped

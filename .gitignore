@@ -1,0 +1,13 @@
+.env
+test*
+notebook*
+
+ignore/
+
+.vscode/
+.pytest_cache/
+*__pycache__/*
+
+.cursorrules
+.cursorignore
+.dockerignore
