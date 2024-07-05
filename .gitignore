@@ -13,6 +13,7 @@ od/
 .pytest_cache/
 *__pycache__/*
 
+app/.DS_Store
 app/__pycache__/*
 app/LMSS.owl
 app/lmss_graph.ttl 

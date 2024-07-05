@@ -1,5 +1,7 @@
 # SALI-E - Legal Matter Specification Standard Entity Recognizer
 
+**This README is not in step with feature-branch**
+
 ![LMSS Entity Recognizer](lmss_entity_recognizer.png)
 
 ## Quick Start
@@ -55,3 +57,9 @@ To get started with the SALI-E - Legal Matter Specification Standard Entity Reco
 - For direct running, ensure you have Python and pip installed.
 
 python -m spacy download en_core_web_sm
+
+python -m spacy download en_core_web_trf
+
+What other downloads are useful
+
+Make embedding avialable (bulk upload)

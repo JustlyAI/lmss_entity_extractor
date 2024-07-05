@@ -9,11 +9,8 @@ from sentence_transformers import SentenceTransformer
 from typing import Dict, List, Tuple, Any
 import logging
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
-
-class EnhancedLMSSOntologyParser:
+class LMSSOntologyParser:
     def __init__(self, ontology_file: str):
         self.ontology_file = ontology_file
         self.graph = Graph()
@@ -22,6 +19,9 @@ class EnhancedLMSSOntologyParser:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         self.LMSS = Namespace("http://lmss.sali.org/")
         self.graph.bind("lmss", self.LMSS)
+        self.excluded_prefixes = ["ZZZ - SANDBOX: UNDER CONSTRUCTION"]
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.INFO)
 
     @staticmethod
     def download_ontology(url: str, save_path: str):
@@ -34,13 +34,17 @@ class EnhancedLMSSOntologyParser:
             with open(save_path, "wb") as file:
                 file.write(response.content)
             if os.path.exists(save_path):
-                logger.info("We have updated the LMSS ontology with the latest version")
+                logging.getLogger(__name__).info(
+                    "We have updated the LMSS ontology with the latest version"
+                )
             else:
-                logger.info(
+                logging.getLogger(__name__).info(
                     f"Successfully downloaded ontology and saved to {save_path}"
                 )
         else:
-            logger.error(f"Failed to download ontology. Status code: {response.status}")
+            logging.getLogger(__name__).error(
+                f"Failed to download ontology. Status code: {response.status_code}"
+            )
 
     @staticmethod
     def calculate_file_hash(file_path: str) -> str:
@@ -51,29 +55,42 @@ class EnhancedLMSSOntologyParser:
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
 
+    def should_exclude(self, label: str) -> bool:
+        """Check if the entity should be excluded based on its label."""
+        return any(prefix in label for prefix in self.excluded_prefixes)
+
     async def parse_ontology(self):
         """Parses the ontology to extract classes, hierarchical relationships, attributes, and inter-class relationships."""
-        logger.info("Parsing ontology...")
+        self.logger.info("Parsing ontology...")
         self.graph.parse(self.ontology_file, format="xml")
 
         for s, p, o in self.graph:
             if p == RDF.type and o == OWL.Class:
                 iri = str(s)
-                self.entities[iri] = {
-                    "rdf:about": iri,
-                    "rdfs:label": self.get_literal(s, RDFS.label),
-                    "description": self.get_literal(
-                        s, URIRef("http://purl.org/dc/elements/1.1/description")
-                    ),
-                    "rdfs:seeAlso": self.get_literals(s, RDFS.seeAlso),
-                    "skos:altLabel": self.get_literals(s, SKOS.altLabel),
-                    "skos:definition": self.get_literal(s, SKOS.definition),
-                    "skos:example": self.get_literals(s, SKOS.example),
-                    "skos:prefLabel": self.get_literal(s, SKOS.prefLabel),
-                }
+                label = self.get_literal(s, RDFS.label)
+                if not self.should_exclude(label):
+                    self.entities[iri] = {
+                        "rdf:about": iri,
+                        "rdfs:label": label,
+                        "description": self.get_literal(
+                            s, URIRef("http://purl.org/dc/elements/1.1/description")
+                        ),
+                        "rdfs:seeAlso": self.get_literals(s, RDFS.seeAlso),
+                        "skos:altLabel": self.get_literals(s, SKOS.altLabel),
+                        "skos:definition": self.get_literal(s, SKOS.definition),
+                        "skos:example": self.get_literals(s, SKOS.example),
+                        "skos:prefLabel": self.get_literal(s, SKOS.prefLabel),
+                    }
 
         self.identify_top_classes()
-        logger.info(f"Parsed {len(self.entities)} entities from the ontology.")
+        self.logger.info(f"Parsed {len(self.entities)} entities from the ontology.")
+
+        excluded_count = sum(
+            1
+            for s, p, o in self.graph.triples((None, RDF.type, OWL.Class))
+            if self.should_exclude(self.get_literal(s, RDFS.label))
+        )
+        self.logger.info(f"Excluded {excluded_count} entities based on prefix rules.")
 
     def get_literal(self, s: URIRef, p: URIRef) -> str:
         return str(self.graph.value(s, p, default=""))
@@ -82,23 +99,26 @@ class EnhancedLMSSOntologyParser:
         return [str(o) for o in self.graph.objects(s, p)]
 
     def identify_top_classes(self):
-        """Identifies direct children of OWL:Thing, excluding 'ZZZ - SANDBOX: UNDER CONSTRUCTION'."""
+        """Identifies direct children of OWL:Thing, excluding specified prefixes."""
         self.top_classes = [
             s
             for s, p, o in self.graph.triples((None, RDFS.subClassOf, OWL.Thing))
-            if "ZZZ - SANDBOX: UNDER CONSTRUCTION" not in str(s)
+            if not self.should_exclude(self.get_literal(s, RDFS.label))
         ]
-        logger.info(f"Identified {len(self.top_classes)} high-level parent classes.")
+        self.logger.info(
+            f"Identified {len(self.top_classes)} high-level parent classes."
+        )
 
     async def generate_embeddings(self):
         """Generates embeddings for all entities."""
-        logger.info("Generating embeddings...")
+        self.logger.info("Generating embeddings...")
         embedding_tasks = [
             self.generate_entity_embedding(iri, entity)
             for iri, entity in self.entities.items()
+            if not self.should_exclude(entity.get("rdfs:label", ""))
         ]
         await asyncio.gather(*embedding_tasks)
-        logger.info("Finished generating embeddings.")
+        self.logger.info("Finished generating embeddings.")
 
     async def generate_embeddings_for_class(self, top_class: URIRef):
         """Generates embeddings for all entities under a specific top-class."""
@@ -115,7 +135,7 @@ class EnhancedLMSSOntologyParser:
         for s, p, o in self.graph.triples((None, RDFS.subClassOf, class_uri)):
             if str(s) in self.entities:
                 entities[str(s)] = self.entities[str(s)]
-            entities.update(self.get_entities_under_class(s))
+                entities.update(self.get_entities_under_class(s))
         return entities
 
     async def generate_entity_embedding(self, iri: str, entity: Dict[str, Any]):
@@ -160,23 +180,22 @@ class EnhancedLMSSOntologyParser:
                     )
                 )
 
-            logger.info(f"Added embeddings for entity: {iri}")
+            self.logger.info(f"Added embeddings for entity: {iri}")
         else:
-            logger.warning(f"No data to embed for entity: {iri}")
+            self.logger.warning(f"No data to embed for entity: {iri}")
 
     def save_to_json(self, file_path: str):
         """Saves the parsed ontology data to a JSON file."""
         with open(file_path, "w") as f:
             json.dump(self.entities, f, indent=2)
-        logger.info(f"Saved ontology data to {file_path}")
+        self.logger.info(f"Saved ontology data to {file_path}")
 
     def save_graph(self, file_path: str):
         """Saves the RDF graph to a file."""
         self.graph.serialize(destination=file_path, format="turtle")
-        logger.info(f"Saved RDF graph to {file_path}")
+        self.logger.info(f"Saved RDF graph to {file_path}")
 
     async def process_ontology(self, index_path: str, graph_path: str):
-        """Processes the ontology, creating the index and generating embeddings."""
         await self.parse_ontology()
         self.save_to_json(index_path)
         await self.generate_embeddings()
@@ -189,6 +208,10 @@ class EnhancedLMSSOntologyParser:
         query_embedding = self.model.encode(query)
         results = []
         for iri, entity in self.entities.items():
+            # Skip entities that should be excluded
+            if self.should_exclude(entity.get("rdfs:label", "")):
+                continue
+
             entity_uri = URIRef(iri)
             for embedding_node in self.graph.objects(
                 entity_uri, self.LMSS.hasEmbedding

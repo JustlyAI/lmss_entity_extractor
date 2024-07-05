@@ -17,14 +17,14 @@ We are developing an open-source software project, SALI-E, which will be publish
 
 #### 1.2. Create a searchable index:
 
-- Include: rdf:about, rdf-schema#label, description, rdf-schema#seeAlso, skos:altLabel, core#definition, core#example, core#prefLabel
-
+- Include: rdf:about, rdfs:label, description, rdfs:seeAlso, skos:altLabel, skos:definition, skos:example, skos:prefLabel
 - Store this information within the RDF graph structure.
 
 #### 1.3. Enrich the index with vector embeddings:
 
-- Generate embeddings for the following annotations: rdf-schema#label, description, rdf-schema#seeAlso, skos:altLabel, core#definition, core#example, core#prefLabel, for semantic similarity matching.
-- Store embeddings as separate additional properties on the nodes in the RDF graph. In later operations these separate properties may be grouped together.
+- Generate embeddings for the following annotations: rdfs:label, description, rdfs:seeAlso, skos:altLabel, skos:definition, skos:example, skos:prefLabel, for semantic similarity matching.
+- Store embeddings as separate additional properties on the nodes in the RDF graph.
+- Use the 'all-MiniLM-L6-v2' model for generating embeddings.
 
 #### 1.4. Identify and prioritize high-level parent classes:
 
@@ -32,7 +32,13 @@ We are developing an open-source software project, SALI-E, which will be publish
 - Ignore the parent class called 'ZZZ - SANDBOX: UNDER CONSTRUCTION'.
 - Use these parent classes downstream to improve classification and enable async processes by parent branch.
 
-### 2. Entity Extraction Process
+#### 1.6. Implement efficient storage and retrieval:
+
+- Save the parsed ontology data to a JSON file for quick access.
+- Save the full RDF graph, including embeddings, to a Turtle (.ttl) file.
+- Implement a file hashing mechanism to check for ontology updates.
+
+### 2. Entity Extraction and Classification Process
 
 #### 2.1. Implement general-purpose NER:
 
@@ -40,11 +46,32 @@ We are developing an open-source software project, SALI-E, which will be publish
 
 #### 2.2. Implement keyword extraction:
 
-- Use techniques like TF-IDF or TextRank for terms missed by NER.
+- Use TF-IDF to extract important keywords that might have been missed by NER.
 
 #### 2.3. Classify extracted terms into ontological branches:
 
-- Use cosine similarity between term embeddings and branch embeddings (the vectors created in step 1 grouped together) to pre-classify terms in a particular branch.
+- UNDER REVIEW
+- Implement a similarity threshold to filter out entities and keywords not closely related to the LMSS ontology.
+- Distinguish between NER-extracted entities and TF-IDF-extracted keywords in the classification process.
+
+#### 2.4. Implement fuzzy matching:
+
+- Use fuzzy string matching (e.g., Levenshtein distance) to match entities with branch labels.
+- Set a fuzzy matching threshold to determine successful matches.
+
+#### 2.5. Combine semantic and fuzzy matching:
+
+- Attempt semantic matching first, then fall back to fuzzy matching if semantic matching fails.
+- Return the match type (semantic or fuzzy) along with the matched entity and branch.
+
+#### 2.6. Filter and refine results:
+
+- Remove entities and keywords that do not meet either the similarity threshold or the fuzzy matching threshold with any branch.
+- Identify features that are classifiable under the LMSS ontology.
+
+#### 2.7. Log unmatched terms:
+
+- Keep track of entities and keywords that couldn't be matched for potential ontology expansion.
 
 ### 3. Ontology Matching
 
@@ -56,10 +83,6 @@ We are developing an open-source software project, SALI-E, which will be publish
 
 - Use string matching (e.g., Levenshtein distance, fuzzy matching).
 - Leverage word embeddings for semantic similarity.
-
-#### 3.3. Log unmatched terms:
-
-- For potential ontology expansion.
 
 ### 4. Hierarchical Classification
 
@@ -79,6 +102,7 @@ We are developing an open-source software project, SALI-E, which will be publish
 #### 6.1. Develop a scoring system:
 
 - Based on string similarity, semantic similarity, and contextual relevance.
+- Incorporate both semantic similarity scores and fuzzy matching scores.
 
 ### 7. Visualization
 
@@ -92,16 +116,17 @@ We are developing an open-source software project, SALI-E, which will be publish
 
 ### Ontology Preprocessing:
 
-- Enhance `LMSSOntologyParser` to use `rdflib` for storing the ontology and embeddings.
+- Enhance `EnhancedLMSSOntologyParser` to use `rdflib` for storing the ontology and embeddings.
 - Implement efficient indexing and querying using SPARQL.
+- Add functionality to generate and store branch embeddings.
+- Implement file hashing and checking for ontology updates.
 
-### Entity Extraction:
+### Entity Extraction and Classification:
 
-- Develop `GeneralEntityExtractor` using spaCy and keyword extraction methods.
-
-### Ontology Matching:
-
-- Create `OntologyMatcher` for string and semantic similarity matching, utilizing the RDF graph structure.
+- Develop `EntityExtractor` using spaCy for NER and TF-IDF for keyword extraction.
+- Implement classification method using branch embeddings and cosine similarity.
+- Add fuzzy matching using fuzzywuzzy library.
+- Implement filtering mechanism based on similarity and fuzzy matching thresholds.
 
 ### Document Loader:
 
@@ -134,7 +159,46 @@ We are developing an open-source software project, SALI-E, which will be publish
 - Parent Class
 - Matching Class
 - IRI
+- Match Type (Semantic or Fuzzy)
+- Confidence Score
 
 #### 6.6. Interactive visualization of selected class node, its parents, and children (up to the root and down).
 
 #### 6.7. JSON download button for full classification results.
+
+## Project Structure
+
+```
+sali-e/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── lmss_ontology_parser.py
+│   ├── entity_extractor.py
+│   ├── run_embeddings.py
+│   └── run_entity_extraction.py
+├── static/
+│   └── js/
+│       └── main.js
+├── templates/
+│   └── index.html
+├── tests/
+│   ├── test_lmss_ontology_parser.py
+│   └── test_entity_extractor.py
+├── requirements.txt
+├── README.md
+└── Dockerfile
+```
+
+## Next Steps
+
+1. Implement and test the `EnhancedLMSSOntologyParser` with all the described features.
+2. Develop and test the `EntityExtractor` with both semantic and fuzzy matching capabilities.
+3. Create the `run_embeddings.py` script to handle ontology processing and branch embedding generation.
+4. Refine the `run_entity_extraction.py` script to focus on entity extraction and classification.
+5. Develop the FastAPI endpoints for the backend.
+6. Create the front-end interface using HTML and JavaScript.
+7. Implement visualization features for entity relationships and ontology structure.
+8. Conduct thorough testing and optimization of the entire pipeline.
+9. Document the project, including usage instructions and API documentation.
+10. Prepare for open-source release on GitHub under the MIT License.
