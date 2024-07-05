@@ -11,6 +11,9 @@ od/
 
 app/__pycache__/*
 app/LMSS.owl
+app/lmss_graph.ttl 
+app/lmss_index.json
+app/lmss_hash.txt
 
 .cursorrules
 .cursorignore
