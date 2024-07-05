@@ -53,3 +53,5 @@ To get started with the SALI-E - Legal Matter Specification Standard Entity Reco
 - Inspect endpoints at [http://localhost:8000/docs](http://localhost:8000/docs)
 - Ensure you have Docker installed on your machine.
 - For direct running, ensure you have Python and pip installed.
+
+python -m spacy download en_core_web_sm
