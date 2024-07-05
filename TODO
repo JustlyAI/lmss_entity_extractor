@@ -1,1 +1,140 @@
-A LOT
+# SALI-E: Legal Matter Specification Standard Entity Recognizer
+
+## Project Overview
+
+We are developing an open-source software project, SALI-E, which will be published on GitHub under the MIT License. SALI-E applies the Legal Matter Standards Specification ontology (LMSS) in OWL format to text documents. The project uses Python, FastAPI, HTML, and JavaScript, leveraging open-source libraries and models. The goal is to extract relevant features from documents using Natural Language Processing (NLP) and Named-Entity Recognition (NER) based on the LMSS ontology.
+
+## Plan: LMSS Entity Recognizer
+
+### 1. Ontology Analysis and Preprocessing
+
+#### 1.1. Parse the LMSS ontology:
+
+- Extract classes, hierarchical relationships, attributes, and inter-class relationships.
+- Use `rdflib` for robust RDF/OWL parsing.
+- Store the ontology structure and embeddings in an RDF graph using `rdflib`.
+- The IRI is the unique identifier and has this format: <owl:Class rdf:about="http://lmss.sali.org/A35ng-FGRcus0Cc0pYFhYA">
+
+#### 1.2. Create a searchable index:
+
+- Include: rdf:about, rdf-schema#label, description, rdf-schema#seeAlso, skos:altLabel, core#definition, core#example, core#prefLabel
+
+- Store this information within the RDF graph structure.
+
+#### 1.3. Enrich the index with vector embeddings:
+
+- Generate embeddings for the following annotations: rdf-schema#label, description, rdf-schema#seeAlso, skos:altLabel, core#definition, core#example, core#prefLabel, for semantic similarity matching.
+- Store embeddings as separate additional properties on the nodes in the RDF graph. In later operations these separate properties may be grouped together.
+
+#### 1.4. Identify and prioritize high-level parent classes:
+
+- Programmatically identify direct children of `OWL:Thing` (currently 25 high-level parents).
+- Ignore the parent class called 'ZZZ - SANDBOX: UNDER CONSTRUCTION'.
+- Use these parent classes downstream to improve classification and enable async processes by parent branch.
+
+### 2. Entity Extraction Process
+
+#### 2.1. Implement general-purpose NER:
+
+- Use spaCy's `en_core_web_sm` model to identify potential entities.
+
+#### 2.2. Implement keyword extraction:
+
+- Use techniques like TF-IDF or TextRank for terms missed by NER.
+
+#### 2.3. Classify extracted terms into ontological branches:
+
+- Use cosine similarity between term embeddings and branch embeddings (the vectors created in step 1 grouped together) to pre-classify terms in a particular branch.
+
+### 3. Ontology Matching
+
+#### 3.1. Graph-based matching algorithm:
+
+- Leverage the ontology's structure for matching using SPARQL queries on the RDF graph.
+
+#### 3.2. Multiple matching techniques:
+
+- Use string matching (e.g., Levenshtein distance, fuzzy matching).
+- Leverage word embeddings for semantic similarity.
+
+#### 3.3. Log unmatched terms:
+
+- For potential ontology expansion.
+
+### 4. Hierarchical Classification
+
+#### 4.1. For matched entities, traverse the ontology hierarchy:
+
+- Identify parent classes and return them for context.
+- Implement a confidence-based pruning mechanism to avoid overly general classifications.
+
+### 5. User-Driven Class Selection
+
+#### 5.1. Allow users to select specific classes or branches:
+
+- Implement a filtering mechanism for entities matching user-selected classes or subclasses.
+
+### 6. Confidence Scoring
+
+#### 6.1. Develop a scoring system:
+
+- Based on string similarity, semantic similarity, and contextual relevance.
+
+### 7. Visualization
+
+#### 7.1. Create a visual representation of extracted entities:
+
+- Show their place in the ontology hierarchy.
+- Display relationships to other entities using a force-directed graph layout.
+- Implement zooming and panning features for large ontologies.
+
+## Implementation Outline
+
+### Ontology Preprocessing:
+
+- Enhance `LMSSOntologyParser` to use `rdflib` for storing the ontology and embeddings.
+- Implement efficient indexing and querying using SPARQL.
+
+### Entity Extraction:
+
+- Develop `GeneralEntityExtractor` using spaCy and keyword extraction methods.
+
+### Ontology Matching:
+
+- Create `OntologyMatcher` for string and semantic similarity matching, utilizing the RDF graph structure.
+
+### Document Loader:
+
+- Use `Unstructured` or `PyPDF2` for PDF handling.
+
+### API Development (FastAPI):
+
+- Endpoint for document upload.
+- Endpoint for ontology class selection.
+- Endpoint for retrieving extracted and matched entities.
+- Endpoint for detailed entity/class information.
+- Implement GraphQL API for flexible querying.
+
+### Front-End Development (HTML/JavaScript):
+
+#### 6.1. Text input field.
+
+#### 6.2. Document uploader (with PDF-to-text conversion).
+
+#### 6.3. Interface for selecting ontology branches.
+
+#### 6.4. Process initiation button.
+
+#### 6.5. Results table displaying:
+
+- Document Title
+- Span Start
+- Span End
+- Text
+- Parent Class
+- Matching Class
+- IRI
+
+#### 6.6. Interactive visualization of selected class node, its parents, and children (up to the root and down).
+
+#### 6.7. JSON download button for full classification results.

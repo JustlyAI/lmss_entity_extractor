@@ -3,6 +3,7 @@ test*
 notebook*
 
 ignore/
+od/
 
 .vscode/
 .pytest_cache/

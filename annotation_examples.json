@@ -1,0 +1,596 @@
+{
+    "http://lmss.sali.org/RBwBJ2lKdRgVYPkQmoJN1pD": [
+        [
+            "M&A C Due Diligence and Disclosure Schedules Practice",
+            "MC00"
+        ],
+        [
+            "M&A H Closing Matters Practice",
+            "MH00"
+        ],
+        [
+            "M&A D Ancillary Documents Practice",
+            "MD00"
+        ],
+        [
+            "M&A G Shareholder / Board Matters Practice",
+            "MG00"
+        ],
+        [
+            "M&A A Preliminary Matters Practice",
+            "MA00"
+        ]
+    ],
+    "http://lmss.sali.org/RCAWR19VGcj184M2SBAaeoj": [
+        [
+            "Executive Compensation Practice",
+            "MF31"
+        ],
+        [
+            "M&A F3 Employment, Labor and Employee Benefits Practice",
+            "MF30"
+        ],
+        [
+            "M&A F6 Real Property Practice",
+            "MF60"
+        ],
+        [
+            "M&A F7 Securities Regulatory Matters Practice",
+            "MF70"
+        ],
+        [
+            "M&A F1 Antitrust / Competition Practice",
+            "MF10"
+        ]
+    ],
+    "http://lmss.sali.org/RDztYH7do2tyqzcXc0HSMnk": [
+        [
+            "Employment Contracts Law",
+            "Canada"
+        ],
+        [
+            "Municipal Law",
+            "Canada"
+        ],
+        [
+            "Condominium Law",
+            "Canada"
+        ],
+        [
+            "Custody Law",
+            "Canada"
+        ],
+        [
+            "Franchise Law",
+            "Canada"
+        ]
+    ],
+    "http://lmss.sali.org/RTVHIHUY48KidG92GXtTlH": [
+        [
+            "Alphabet Inc.",
+            "http://lmss.sali.org/RBUUlIPDHukFNzYcJlhb19"
+        ],
+        [
+            "Alphabet Inc.",
+            "http://lmss.sali.org/RBgCd6W5kgYyg3ng4IHjeKZ"
+        ],
+        [
+            "Alphabet Inc.",
+            "http://lmss.sali.org/RDnxFA2pA69eoOb9BBCypq0"
+        ],
+        [
+            "Alphabet Inc.",
+            "http://lmss.sali.org/RC4Iua2onHyc62NG8ul4rwR"
+        ],
+        [
+            "Alphabet Inc.",
+            "http://lmss.sali.org/RCOKf7Z7BGZZZupKD5H2EuO"
+        ]
+    ],
+    "http://lmss.sali.org/legacyIdentifier": [
+        [
+            "Commewijne",
+            "http://code.sali.org/v1/LMSS/#Loc-SAM-SR-SR+CM"
+        ],
+        [
+            "Tverskaya oblast'",
+            "http://code.sali.org/v1/LMSS/#Loc-EUR-RU-RU+TVE"
+        ],
+        [
+            "Xekong",
+            "http://code.sali.org/v1/LMSS/#Loc-ASI-LA-LA+XE"
+        ],
+        [
+            "River Gee",
+            "http://code.sali.org/v1/LMSS/#Loc-AFR-LR-LR+RG"
+        ],
+        [
+            "Kouritenga",
+            "http://code.sali.org/v1/LMSS/#Loc-AFR-BF-BF+KOT"
+        ]
+    ],
+    "http://purl.org/dc/elements/1.1/description": [
+        [
+            "Work Location",
+            "Work Location refers to the specific place or site where an employee or worker performs their job duties. This can include a physical office, a remote location, a client's site, or any other place designated by the employer as the workspace."
+        ],
+        [
+            "Noticing Agent",
+            "Bankruptcy Courts will sometimes outsource court duties (e.g., noticing) to external agents (e.g., Noticing Agents)"
+        ],
+        [
+            "Fee Examiner",
+            "An expert appointed (e.g., by a court) to determine the reasonableness of attorney fees)"
+        ],
+        [
+            "Claims Agent",
+            "Bankruptcy Courts will sometimes outsource court duties (e.g., Claims) to external agents (e.g., Claims Agents)"
+        ],
+        [
+            "Visa Bulletin",
+            "The Visa Bulletin is a monthly publication by the U.S. Department of State that provides updated information on the availability of immigrant visa numbers. It is used to determine when applicants for permanent residency can file their Adjustment of Status applications or schedule their immigrant visa interviews, based on their priority date."
+        ]
+    ],
+    "http://purl.org/dc/elements/1.1/identifier": [
+        [
+            "Nord-Est",
+            "NAM-HT-HT+NE"
+        ],
+        [
+            "Samburu",
+            "AFR-KE-KE+37"
+        ],
+        [
+            "Guangxi",
+            "ASI-CN-CN+GX"
+        ],
+        [
+            "Hhohho",
+            "AFR-SZ-SZ+HH"
+        ],
+        [
+            "Beqaa",
+            "ASI-LB-LB+BI"
+        ]
+    ],
+    "http://purl.org/dc/elements/1.1/source": [
+        [
+            "One-Step Merger",
+            "ABA M&A Deal Points Study"
+        ],
+        [
+            "Gender",
+            "https://www.nih.gov/nih-style-guide/sex-gender-sexuality"
+        ],
+        [
+            "Governmental Entity",
+            "https://uscode.house.gov/view.xhtml?path=/prelim@title11/chapter1&edition=prelim#:~:text=(27)%20The%20term%20%22governmental,a%20Commonwealth%2C%20a%20District%2C%20a"
+        ],
+        [
+            "Equitable Indemnification",
+            "https://www.docketalarm.com/cases/California_State_Alameda_County_Superior_Court/23CV028370/MUSK_AN_INDIVIDUAL_vs_GREENSPAN_AN_INDIVIDUAL_et_al/35579081/"
+        ],
+        [
+            "Freedom of Thought and Conscience",
+            "International Bill of Human Rights"
+        ]
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+        [
+            "Residential Building Construction",
+            "http://www.w3.org/2002/07/owl#Class"
+        ],
+        [
+            "N593484e229c84d9faddf502f4ffa66a6",
+            "http://www.w3.org/2002/07/owl#Restriction"
+        ],
+        [
+            "Andorra",
+            "http://www.w3.org/2002/07/owl#Class"
+        ],
+        [
+            "Inland Water Transportation",
+            "http://www.w3.org/2002/07/owl#Class"
+        ],
+        [
+            "All Other Business Support Services",
+            "http://www.w3.org/2002/07/owl#Class"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": [
+        [
+            "Indigent",
+            "From LIST: Legal Issues Taxonomy \u2014 https://taxonomy.legal/"
+        ],
+        [
+            "In-home Supportive Service Disability Benefit",
+            "From LIST: Legal Issues Taxonomy \u2014 https://taxonomy.legal/"
+        ],
+        [
+            "Nation-Provided Public Benefit",
+            "From LIST: Legal Issues Taxonomy \u2014 https://taxonomy.legal/"
+        ],
+        [
+            "Recoupment of Public Benefit",
+            "From LIST: Legal Issues Taxonomy \u2014 https://taxonomy.legal/"
+        ],
+        [
+            "In Forma Pauperis",
+            "From LIST: Legal Issues Taxonomy \u2014 https://taxonomy.legal/"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#domain": [
+        [
+            "sali:operators",
+            "http://www.w3.org/2002/07/owl#Thing"
+        ],
+        [
+            "sali:asserted",
+            "http://lmss.sali.org/R8CdMpOM0RmyrgCCvbpiLS0"
+        ],
+        [
+            "sali:filed",
+            "http://lmss.sali.org/R9x6yqzHQfo3MF4rxIcPupm"
+        ],
+        [
+            "sali:participatedIn",
+            "http://lmss.sali.org/R8CdMpOM0RmyrgCCvbpiLS0"
+        ],
+        [
+            "sali:workedFor",
+            "http://lmss.sali.org/R8CdMpOM0RmyrgCCvbpiLS0"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#isDefinedBy": [
+        [
+            "Iron and Steel Pipe and Tube Manufacturing from Purchased Steel",
+            "https://www.naics.com/six-digit-naics/?code=33121"
+        ],
+        [
+            "Other Basic Inorganic Chemical Manufacturing",
+            "https://www.naics.com/six-digit-naics/?code=325180"
+        ],
+        [
+            "Cookie and Cracker Manufacturing",
+            "https://www.naics.com/six-digit-naics/?code=311821"
+        ],
+        [
+            "Pipeline Transportation of Crude Oil",
+            "https://www.naics.com/six-digit-naics/?code=4861"
+        ],
+        [
+            "Dimension Stone Mining and Quarrying",
+            "https://www.naics.com/six-digit-naics/?code=212311"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+        [
+            "Motion for Relief due to Newly Discovered Evidence",
+            "Motion for Relief due to Newly Discovered Evidence"
+        ],
+        [
+            "Scienter",
+            "Scienter"
+        ],
+        [
+            "U.S. District Courts",
+            "U.S. District Courts"
+        ],
+        [
+            "Motion to Refer Case to Mediation",
+            "Motion to Refer Case to Mediation"
+        ],
+        [
+            "Minnesota District Court - Clearwater County",
+            "Minnesota District Court - Clearwater County"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#range": [
+        [
+            "sali:received",
+            "http://lmss.sali.org/RDt4vQCYDfY0R9fZ5FNnTbj"
+        ],
+        [
+            "sali:ruledUpon",
+            "http://lmss.sali.org/Rjco9ohucVSJ0XxprM5Opb"
+        ],
+        [
+            "has figure collection",
+            "http://lmss.sali.org/Rwb69BL1DbTISxyVYJJApb"
+        ],
+        [
+            "sali:found",
+            "http://lmss.sali.org/R7ZrWzdAOf6mXVtcQ49gWat"
+        ],
+        [
+            "has role collection",
+            "http://lmss.sali.org/R7cLxNTHXARH6xtJZ2kNYQW"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#seeAlso": [
+        [
+            "Opposition / Reply",
+            "Reply"
+        ],
+        [
+            "Clergy-Penitent Privilege",
+            "Priest-Penitent Privilege"
+        ],
+        [
+            "Debtor's Election of Subchapter V",
+            "A Debtor's Election of Subchapter V is a legal choice made by a debtor to proceed under Subchapter V of Chapter 11 in the U.S. Bankruptcy Code, which is designed specifically for small business debtors. This election allows for a more streamlined and less costly reorganization process, providing small business debtors with mechanisms to facilitate quicker and easier debt restructuring."
+        ],
+        [
+            "Position Posting",
+            "Employment Opportunity Notice"
+        ],
+        [
+            "Government Employee",
+            "A government employee is an individual who works for a governmental organization, typically as part of the civil service. Unlike elected or appointed officials, government employees are usually career professionals who perform administrative, technical, or operational tasks to implement government policies and provide public services."
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#subClassOf": [
+        [
+            "Odeska oblast",
+            "http://lmss.sali.org/R264a7543A779D2F38717714"
+        ],
+        [
+            "Resource Lease",
+            "N8d14970678374941aad822b8b52e62f1"
+        ],
+        [
+            "Boulkiemde",
+            "http://lmss.sali.org/R7206beF2A06f0FF256B2d93"
+        ],
+        [
+            "Tierra del Fuego",
+            "http://lmss.sali.org/R0E23afA37025BA0e2609ffe"
+        ],
+        [
+            "Contract & Quasi-Contract Claims",
+            "http://lmss.sali.org/R8jYAnNATrfoBxAtIKpf72X"
+        ]
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [
+        [
+            "sali:appendedTo",
+            "http://www.w3.org/2002/07/owl#topObjectProperty"
+        ],
+        [
+            "sali:near",
+            "http://lmss.sali.org/RBeF5svD5xdsZlF7cggOBUa"
+        ],
+        [
+            "sali:authenticated",
+            "http://www.w3.org/2002/07/owl#topObjectProperty"
+        ],
+        [
+            "utbms:Plan and prepare for",
+            "http://lmss.sali.org/RBD1G5FjdaXj6UM26EWBxJc"
+        ],
+        [
+            "hasTimes",
+            "http://lmss.sali.org/R8N2AJIJYBB3hzZL7OeB0CB"
+        ]
+    ],
+    "http://www.w3.org/2002/07/owl#onProperty": [
+        [
+            "Nf95fc4240a604c40847652a0b8c1f62e",
+            "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        ],
+        [
+            "Na2a6f33fe17245fa8b8ac75caf3efdd3",
+            "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        ],
+        [
+            "N5b48f533fac743a8a75cdc9474bec43e",
+            "http://www.w3.org/2002/07/owl#sameAs"
+        ],
+        [
+            "N39bbdd0ffebb4a5fbf1af1628941353d",
+            "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        ],
+        [
+            "Nebe59654f08843cab0399e67e94ee941",
+            "http://lmss.sali.org/RCuyvwwZzhCRHWEZZVIlpHF"
+        ]
+    ],
+    "http://www.w3.org/2002/07/owl#someValuesFrom": [
+        [
+            "N6901ae55c46f4250ab871d115c873758",
+            "http://lmss.sali.org/RBgBfpeyncVHi12taLMVIIi"
+        ],
+        [
+            "N45f8f6054fe1466d8cbc2bedfee5a421",
+            "http://lmss.sali.org/R9cd2WZCsfwJiHkhJ4VKbVM"
+        ],
+        [
+            "N08fbda8be3ee4124932e6aa6be8d6188",
+            "http://lmss.sali.org/R9JkfZIjkVSa5ud1tJ14w3i"
+        ],
+        [
+            "N95a83e72e47f4384975b9cc916fa55ee",
+            "http://lmss.sali.org/RBEXxc9B6kR2p0BMwGjhWGW"
+        ],
+        [
+            "Nf43e6d3fbf2342c3a155eb2081cd1e0c",
+            "http://lmss.sali.org/R7TgV9FkR8Q4DMivxT5656"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#altLabel": [
+        [
+            "Office of the National Coordinator for Health Information Technology",
+            "B\u00fcro des Nationalen Koordinators f\u00fcr Gesundheitsinformationstechnologie"
+        ],
+        [
+            "Limited Partnership",
+            "Kommanditgesellschaft"
+        ],
+        [
+            "Aggravated",
+            "\u092d\u0921\u093c\u0915\u093e\u090a"
+        ],
+        [
+            "State Department Office of the Inspector General",
+            "B\u00fcro des Generalinspekteurs des Au\u00dfenministeriums"
+        ],
+        [
+            "Investment Advisor Law",
+            "Lei de consultor de investimentos"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#definition": [
+        [
+            "Expert Report",
+            "An Expert Report is a written document that provides an opinion or analysis on a specific subject matter by an individual with specialized knowledge or experience, often used as evidence in legal proceedings."
+        ],
+        [
+            "CCRS Clause",
+            "A CCRS Clause is a specific type of contractual clause that pertains to the Canadian Common Reporting Standard (CCRS) and outlines the obligations and responsibilities of the parties involved in the exchange of financial information."
+        ],
+        [
+            "Trade Secret Assets",
+            "Trade Secret Assets are a type of Intellectual Property Asset that refers to confidential information or knowledge that provides a competitive advantage to a person, business, or economic entity and is kept secret from the public."
+        ],
+        [
+            "BILLING_START_DATE",
+            "The term BILLING_START_DATE refers to the date on which a billing period begins, as defined in the LEDES98BI V5 Format Rev 1-2020 standard for electronic legal invoicing."
+        ],
+        [
+            "Manx",
+            "Manx (Language) is a structured system of communication that consists of grammar and vocabulary, and is a member of the Language top-level class."
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#example": [
+        [
+            "Other Rubber Product Manufacturing",
+            "Mechanical rubber goods (i.e., molded, extruded, lathe-cut) manufacturing"
+        ],
+        [
+            "Air-Conditioning and Warm Air Heating Equipment and Commercial and Industrial Refrigeration Equipment Manufacturing",
+            "Air-conditioning condensers and condensing units manufacturing"
+        ],
+        [
+            "All Other General Merchandise Retailers",
+            "Home and auto supply stores"
+        ],
+        [
+            "Other Paperboard Container Manufacturing",
+            "Milk cartons made from purchased paper or paperboard"
+        ],
+        [
+            "All Other Specialty Food Retailers",
+            "Coffee and tea (i.e., packaged) retailers"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#hiddenLabel": [
+        [
+            "Saint Mark",
+            "DM+08"
+        ],
+        [
+            "Other Miscellaneous Retailers",
+            "NSTR"
+        ],
+        [
+            "Vaud",
+            "CH+VD"
+        ],
+        [
+            "Yamalo-Nenetskiy avtonomnyy okrug",
+            "RU+YAN"
+        ],
+        [
+            "Silistra",
+            "BG+19"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#inSchema": [
+        [
+            "Fruit of the Poisonous Tree",
+            "UK"
+        ],
+        [
+            "Proximate Cause",
+            "UK"
+        ],
+        [
+            "Fair Use",
+            "UK"
+        ],
+        [
+            "Blue Sky Claim",
+            "UK"
+        ],
+        [
+            "Castle Doctrine",
+            "UK"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#inScheme": [
+        [
+            "Hotels and Public Houses",
+            "UK"
+        ],
+        [
+            "Miranda Rights Claim",
+            "UK"
+        ],
+        [
+            "Insurer's Breach of Implied Covenant of Good Faith and Fair Dealing",
+            "UK"
+        ],
+        [
+            "Qualified Immunity",
+            "UK"
+        ],
+        [
+            "Motion to Dismiss",
+            "California"
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#note": [
+        [
+            "Geographic Market Segments",
+            "Non-copyrightable idea and fact inspiration drawn from IAB 2.0. https://www.meaningcloud.com/developer/documentation/predefined/deep-categorization-models/iab-2-0"
+        ],
+        [
+            "Leveraged Buyout",
+            "We're still thinking through which parent this has."
+        ],
+        [
+            "Bankruptcy, Insolvency, and Restructuring Law",
+            "Added \"Insolvency\" to rdfs:label, per UK law (where \"insolvency\" differs from \"bankruptcy\"). In the UK, individuals and companies can be \"insolvent,\" but companies cannot file for \"bankruptcy.\""
+        ],
+        [
+            "Emotion",
+            "This is helpful for classifying various legal texts. For example, deposition testimony might state that the person was angry, leading to the murder. Other testimony might state that the person was fearful for their life, therefore the killing was justified."
+        ],
+        [
+            "Objectives",
+            "Colloquially, these are concepts that lawyers either (1) negotiate or (2) litigate about."
+        ]
+    ],
+    "http://www.w3.org/2004/02/skos/core#prefLabel": [
+        [
+            "Lease Abstract",
+            "Lease Summary"
+        ],
+        [
+            "sali:participatedIn",
+            "sali:wasInvolvedIn"
+        ],
+        [
+            "Savannakhet",
+            "Savannakhet"
+        ],
+        [
+            "Hong Kong dollar",
+            "Hong Kong dollar"
+        ],
+        [
+            "Likoma",
+            "Likoma"
+        ]
+    ]
+}

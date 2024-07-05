@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.org/ontology#"
+     xml:base="http://example.org/ontology"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <owl:Ontology rdf:about="http://example.org/ontology"/>
+
+    <owl:Class rdf:about="http://example.org/ontology#ParentClass">
+        <rdfs:label>Parent Class</rdfs:label>
+        <rdfs:comment>This is a parent class.</rdfs:comment>
+        <skos:altLabel>Parent Class Alternative Label</skos:altLabel>
+        <skos:definition>Definition of Parent Class</skos:definition>
+        <skos:editorialNote>Editorial note for Parent Class</skos:editorialNote>
+        <skos:example>Example of Parent Class</skos:example>
+        <skos:historyNote>History note for Parent Class</skos:historyNote>
+        <skos:note>Note for Parent Class</skos:note>
+        <skos:prefLabel>Preferred Label for Parent Class</skos:prefLabel>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://example.org/ontology#ChildClass">
+        <rdfs:label>Child Class</rdfs:label>
+        <rdfs:comment>This is a child class.</rdfs:comment>
+        <rdfs:subClassOf rdf:resource="http://example.org/ontology#ParentClass"/>
+        <skos:altLabel>Child Class Alternative Label</skos:altLabel>
+        <skos:definition>Definition of Child Class</skos:definition>
+        <skos:editorialNote>Editorial note for Child Class</skos:editorialNote>
+        <skos:example>Example of Child Class</skos:example>
+        <skos:historyNote>History note for Child Class</skos:historyNote>
+        <skos:note>Note for Child Class</skos:note>
+        <skos:prefLabel>Preferred Label for Child Class</skos:prefLabel>
+    </owl:Class>
+
+    <owl:Class rdf:about="http://example.org/ontology#AnotherClass">
+        <rdfs:label>Another Class</rdfs:label>
+        <rdfs:comment>This is another class.</rdfs:comment>
+        <owl:equivalentClass rdf:resource="http://example.org/ontology#ChildClass"/>
+        <skos:altLabel>Another Class Alternative Label</skos:altLabel>
+        <skos:definition>Definition of Another Class</skos:definition>
+        <skos:editorialNote>Editorial note for Another Class</skos:editorialNote>
+        <skos:example>Example of Another Class</skos:example>
+        <skos:historyNote>History note for Another Class</skos:historyNote>
+        <skos:note>Note for Another Class</skos:note>
+        <skos:prefLabel>Preferred Label for Another Class</skos:prefLabel>
+    </owl:Class>
+</rdf:RDF>
