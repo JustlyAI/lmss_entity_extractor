@@ -2,6 +2,9 @@
 test*
 notebook*
 
+*.json
+*.ttl
+
 ignore/
 od/
 
