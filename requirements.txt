@@ -13,3 +13,6 @@ scikit-learn
 fuzzywuzzy
 python-Levenshtein
 nltk
+
+PyPDF2
+docx

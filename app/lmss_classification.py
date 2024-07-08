@@ -1,3 +1,4 @@
+from pydantic import BaseModel, Field
 import numpy as np
 from typing import List, Dict, Any, Tuple, Set
 from fuzzywuzzy import fuzz
@@ -7,6 +8,27 @@ from collections import defaultdict
 import json
 import nltk
 from nltk.corpus import stopwords
+
+
+# Define Pydantic models for structured data
+class Entity(BaseModel):
+    rdf_about: str
+    rdfs_label: str
+    description: str = ""
+    rdfs_seeAlso: List[str] = Field(default_factory=list)
+    skos_altLabel: List[str] = Field(default_factory=list)
+    skos_definition: str = ""
+    skos_example: List[str] = Field(default_factory=list)
+    skos_prefLabel: str = ""
+    subClassOf: List[str] = Field(default_factory=list)
+    embedding: List[float] = Field(default_factory=list)
+
+
+class MatchResult(BaseModel):
+    iri: str = ""
+    label: str = ""
+    similarity: float = 0.0
+    match_type: str = "unmatched"
 
 
 class OntologyMatcher:
@@ -30,10 +52,10 @@ class OntologyMatcher:
         nltk.download("stopwords", quiet=True)
         self.stop_words = set(stopwords.words("english"))
 
-    def _load_ontology_index(self, index_path: str) -> Dict[str, Dict[str, Any]]:
+    def _load_ontology_index(self, index_path: str) -> Dict[str, Entity]:
         with open(index_path, "r") as f:
             data = json.load(f)
-        return {entity["rdf_about"]: entity for entity in data}
+        return {entity["rdf_about"]: Entity(**entity) for entity in data}
 
     def _build_hierarchy_cache(self) -> Dict[str, List[str]]:
         hierarchy_cache = defaultdict(list)
@@ -43,9 +65,6 @@ class OntologyMatcher:
         return hierarchy_cache
 
     def _filter_ontology(self, selected_classes: List[str]) -> Set[str]:
-        """
-        Filter the ontology to include only entities within the selected branches.
-        """
         filtered_entities = set()
         for class_iri in selected_classes:
             filtered_entities.add(class_iri)
@@ -53,9 +72,6 @@ class OntologyMatcher:
         return filtered_entities
 
     def _get_subclasses(self, class_iri: URIRef) -> Set[str]:
-        """
-        Recursively get all subclasses of a given class.
-        """
         subclasses = set()
         for s, p, o in self.graph.triples((None, RDFS.subClassOf, class_iri)):
             subclasses.add(str(s))
@@ -77,9 +93,9 @@ class OntologyMatcher:
             match_result = self._find_best_match_with_context(
                 entity, context, filtered_entities
             )
-            entity["match"] = match_result
-            if match_result["iri"]:
-                entity["hierarchy"] = self._get_entity_hierarchy(match_result["iri"])
+            entity["match"] = match_result.dict()
+            if match_result.iri:
+                entity["hierarchy"] = self._get_entity_hierarchy(match_result.iri)
                 entity["classification"] = self.classify_hierarchically(entity)
             else:
                 entity["hierarchy"] = []
@@ -97,29 +113,29 @@ class OntologyMatcher:
 
     def _find_best_match_with_context(
         self, entity: Dict[str, Any], context: str, filtered_entities: Set[str]
-    ) -> Dict[str, Any]:
+    ) -> MatchResult:
         processed_entity = entity["text"].lower()
         processed_context = context.lower()
         entity_embedding = np.array(entity["vector"])
 
-        best_match = None
+        best_match = ""
         best_similarity = -1
-        best_match_type = None
-        best_match_label = None
+        best_match_type = "unmatched"
+        best_match_label = ""
 
         for iri, ont_entity in self.ontology_entities.items():
             if iri not in filtered_entities:
                 continue
 
-            label = ont_entity.get("rdfs_label", "").lower()
+            label = ont_entity.rdfs_label.lower()
 
             # Context-aware matching
             context_similarity = self._context_similarity(processed_context, label)
 
             # Semantic similarity
-            if "embedding" in ont_entity:
+            if ont_entity.embedding:
                 semantic_similarity = self._cosine_similarity(
-                    entity_embedding, np.array(ont_entity["embedding"])
+                    entity_embedding, np.array(ont_entity.embedding)
                 )
                 combined_similarity = (semantic_similarity + context_similarity) / 2
 
@@ -130,7 +146,7 @@ class OntologyMatcher:
                     best_match = iri
                     best_similarity = combined_similarity
                     best_match_type = "semantic+context"
-                    best_match_label = ont_entity.get("rdfs_label", "")
+                    best_match_label = ont_entity.rdfs_label
 
             # Fuzzy matching with context consideration
             fuzzy_score = fuzz.token_set_ratio(processed_entity, label)
@@ -144,19 +160,19 @@ class OntologyMatcher:
                 best_match = iri
                 best_similarity = combined_fuzzy_similarity
                 best_match_type = "fuzzy+context"
-                best_match_label = ont_entity.get("rdfs_label", "")
+                best_match_label = ont_entity.rdfs_label
 
         if not best_match:
             self.logger.info(
                 f"Unmatched term: {entity['text']} (best similarity: {best_similarity:.2f})"
             )
 
-        return {
-            "iri": best_match,
-            "label": best_match_label,
-            "similarity": best_similarity,
-            "match_type": best_match_type if best_match else "unmatched",
-        }
+        return MatchResult(
+            iri=best_match,
+            label=best_match_label,
+            similarity=best_similarity,
+            match_type=best_match_type,
+        )
 
     def _context_similarity(self, context: str, label: str) -> float:
         context_words = set(w for w in context.split() if w not in self.stop_words)
@@ -209,15 +225,15 @@ class OntologyMatcher:
         candidates = []
 
         for iri, ont_entity in self.ontology_entities.items():
-            if "embedding" in ont_entity:
+            if ont_entity.embedding:
                 similarity = self._cosine_similarity(
-                    entity_embedding, np.array(ont_entity["embedding"])
+                    entity_embedding, np.array(ont_entity.embedding)
                 )
                 candidates.append(
                     {
                         "iri": iri,
                         "similarity": similarity,
-                        "label": ont_entity.get("rdfs_label", ""),
+                        "label": ont_entity.rdfs_label,
                     }
                 )
 
@@ -259,18 +275,13 @@ class OntologyMatcher:
                     filtered_entities,
                 )
 
-                if left_match["iri"] or right_match["iri"]:
+                if left_match.iri or right_match.iri:
                     best_match = (
                         left_match
-                        if left_match["similarity"] > right_match["similarity"]
+                        if left_match.similarity > right_match.similarity
                         else right_match
                     )
-                    entity["match"] = {
-                        "iri": best_match["iri"],
-                        "label": best_match["label"],
-                        "similarity": best_match["similarity"],
-                        "match_type": "partial_match",
-                    }
+                    entity["match"] = best_match.dict()
                     entity["hierarchy"] = self._get_entity_hierarchy(
                         entity["match"]["iri"]
                     )

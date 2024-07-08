@@ -1,6 +1,6 @@
 import json
 import logging
-from app.lmss_classification import EnhancedOntologyMatcher
+from app.lmss_classification import OntologyMatcher
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ def run_classifier():
         extracted_data = json.load(f)
 
     # Initialize the matcher
-    matcher = EnhancedOntologyMatcher(
+    matcher = OntologyMatcher(
         graph_path="app/lmss/lmss_graph.ttl", index_path="app/lmss/lmss_index.json"
     )
 

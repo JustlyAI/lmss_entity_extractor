@@ -3,65 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALI-E: Legal Matter Specification Standard Entity Recognizer</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>LMSS Entity Recognizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #left-nav, #explorer {
+            width: 250px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .hidden {
+            display: none;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        textarea, input[type="file"], button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #results-table, #search-results {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">SALI-E: Legal Matter Specification Standard Entity Recognizer</h1>
-        
-        <div class="flex">
-            <!-- Sidebar -->
-            <div class="w-1/4 pr-4">
-                <h2 class="text-xl font-semibold mb-4">Search Ontology</h2>
-                <input type="text" id="search-input" class="w-full p-2 border rounded mb-2" placeholder="Search...">
-                <button id="search-button" class="w-full bg-blue-500 text-white p-2 rounded">Search</button>
-                <div id="search-results" class="mt-4"></div>
-            </div>
-            
-            <!-- Main content -->
-            <div class="w-3/4">
-                <div class="mb-4">
-                    <h2 class="text-xl font-semibold mb-2">Input Text</h2>
-                    <textarea id="input-text" class="w-full h-32 p-2 border rounded" placeholder="Enter your text here..."></textarea>
-                </div>
-                
-                <div class="mb-4">
-                    <h2 class="text-xl font-semibold mb-2">Or Upload File</h2>
-                    <input type="file" id="file-upload" class="mb-2">
-                </div>
-                
-                <div class="mb-4">
-                    <h2 class="text-xl font-semibold mb-2">Select Ontology Classes</h2>
-                    <select id="class-select" multiple class="w-full p-2 border rounded"></select>
-                </div>
-                
-                <button id="process-button" class="bg-green-500 text-white p-2 rounded">Process</button>
-                
-                <div class="mt-8">
-                    <h2 class="text-xl font-semibold mb-2">Results</h2>
-                    <table id="results-table" class="w-full border-collapse border">
-                        <thead>
-                            <tr>
-                                <th class="border p-2">Text</th>
-                                <th class="border p-2">Start</th>
-                                <th class="border p-2">End</th>
-                                <th class="border p-2">Matching Class</th>
-                                <th class="border p-2">IRI</th>
-                                <th class="border p-2">Match Type</th>
-                                <th class="border p-2">Confidence</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                
-                <button id="download-button" class="mt-4 bg-blue-500 text-white p-2 rounded" style="display: none;">Download Results</button>
-            </div>
-        </div>
+<body>
+    <div id="left-nav">
+        <h2>Legal Matter Specification Standard</h2>
+        <div id="lmss-status"></div>
+        <button id="update-lmss">Download / Update</button>
+        <div id="lmss-progress" class="hidden">Preparing LMSS...</div>
+        <div id="lmss-statistics"></div>
+        <button id="download-index" disabled>Download Index</button>
+        <button id="download-graph" disabled>Download Graph</button>
     </div>
-    
+
+    <div id="main-content">
+        <h2>Classifier</h2>
+        <textarea id="text-input" rows="10" cols="50" placeholder="Enter text here..."></textarea>
+        <br>
+        <input type="file" id="file-input">
+        <br>
+        <div id="lmss-class-selection"></div>
+        <button id="process-document" disabled>Process Document</button>
+        <div id="results-table"></div>
+        <button id="download-json" class="hidden">Download JSON</button>
+    </div>
+
+    <div id="explorer">
+        <h2>Explorer</h2>
+        <input type="text" id="search-input" placeholder="Key Word Search">
+        <select id="class-filter">
+            <option value="">All Classes</option>
+        </select>
+        <div id="search-results"></div>
+        <div id="qa-bot-placeholder">Future home of Q&A Bot</div>
+    </div>
+
     <script src="/static/js/main.js"></script>
 </body>
 </html>

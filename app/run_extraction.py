@@ -2,7 +2,7 @@ import json
 import logging
 import argparse
 from pathlib import Path
-from app.extract_entities import EntityExtractor, Entity
+from app.entity_recognition import EntityExtractor, ExtractedEntity
 from typing import List
 
 logging.basicConfig(
@@ -11,19 +11,19 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def save_results(data: List[Entity], file_path: str):
+def save_results(data: List[ExtractedEntity], file_path: str):
     logger.info(f"Saving results to {file_path}")
     with open(file_path, "w") as f:
         json.dump([entity.dict() for entity in data], f, indent=2)
 
 
-def process_text(text: str, extractor: EntityExtractor) -> List[Entity]:
+def process_text(text: str, extractor: EntityExtractor) -> List[ExtractedEntity]:
     logger.info("Extracting entities")
     extracted_entities = extractor.extract_entities(text)
     return extracted_entities
 
 
-def print_summary(entities: List[Entity]):
+def print_summary(entities: List[ExtractedEntity]):
     print("\nExtraction Summary:")
     print(f"Total entities extracted: {len(entities)}")
 

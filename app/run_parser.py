@@ -69,7 +69,7 @@ async def main():
     embedding_count = sum(
         1 for _ in parser.graph.triples((None, parser.LMSS.hasEmbedding, None))
     )
-    print(f"Number of entities with embeddings: {embedding_count}")
+    print(f"Number of attributes with embeddings: {embedding_count}")
 
     print("\nTop-class statistics:")
     sorted_top_classes = sorted(
@@ -87,7 +87,7 @@ async def main():
     with open("app/lmss/top_classes.json", "w") as f:
         json.dump(top_classes_data, f, indent=2)
 
-    print(f"\nTop classes list saved to app/lmss/top_classes.txt")
+    print(f"\nTop classes list saved to app/lmss/top_classes.json")
     print("Execution completed successfully.")
 
 

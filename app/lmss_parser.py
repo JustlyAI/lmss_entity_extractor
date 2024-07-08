@@ -13,6 +13,8 @@ from typing import Dict, List, Tuple, Any
 import logging
 from tqdm.asyncio import tqdm
 
+# from tqdm import tqdm
+
 
 # Define the InconsistencyError class
 class InconsistencyError(Exception):
@@ -266,8 +268,6 @@ class LMSSOntologyParser:
         self.logger.info("Saving RDF graph...")
         self.save_graph(graph_path)
         self.logger.info("RDF graph saved successfully.")
-
-    from tqdm import tqdm
 
     async def process_ontology(
         self, index_path: str, graph_path: str, max_attempts: int = 3
