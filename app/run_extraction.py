@@ -1,79 +1,66 @@
 import json
 import logging
-from app.entity_extractor import EntityExtractor as Extractor
-from app.lmss_ontology_parser import LMSSOntologyParser as Parser
+import argparse
+from pathlib import Path
+from app.extract_entities import EntityExtractor, Entity
+from typing import List
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
+def save_results(data: List[Entity], file_path: str):
+    logger.info(f"Saving results to {file_path}")
+    with open(file_path, "w") as f:
+        json.dump([entity.dict() for entity in data], f, indent=2)
+
+
+def process_text(text: str, extractor: EntityExtractor) -> List[Entity]:
+    logger.info("Extracting entities")
+    extracted_entities = extractor.extract_entities(text)
+    return extracted_entities
+
+
+def print_summary(entities: List[Entity]):
+    print("\nExtraction Summary:")
+    print(f"Total entities extracted: {len(entities)}")
+
+    print("\nSample Extracted Entities:")
+    for entity in entities[:5]:  # Print first 5 entities
+        print(f"- {entity.text} ({entity.type})")
+
+
 def main():
-    # Paths to pre-processed data
-    index_path = "app/lmss_index.json"
-    ontology_path = "app/LMSS.owl"
+    parser = argparse.ArgumentParser(description="Extract entities from text")
+    parser.add_argument("--input", type=str, help="Path to input text file")
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="app/lmss/extraction_results.json",
+        help="Path to output JSON file",
+    )
+    args = parser.parse_args()
 
-    # Load ontology entities
-    with open(index_path, "r") as f:
-        ontology_entities = json.load(f)
+    extractor = EntityExtractor()
 
-    logger.info(f"Loaded {len(ontology_entities)} ontology entities")
+    if args.input:
+        with open(args.input, "r") as f:
+            text = f.read()
+    else:
+        # Example text if no input file is provided
+        text = """
+        The intellectual property lawyer specializes in patent law and copyright infringement cases.
+        She also handles trademark disputes and trade secret litigation. Recently, she's been working
+        on a high-profile case involving software licensing and open source compliance.
+        """
 
-    # Initialize the UpdatedEntityExtractor
-    extractor = Extractor(similarity_threshold=0.5, fuzzy_threshold=80)
+    results = process_text(text, extractor)
+    save_results(results, args.output)
+    print_summary(results)
 
-    # Initialize the ontology parser (for additional context, not for processing)
-    parser = Parser(ontology_path)
-
-    # Example text (in a real scenario, this could be loaded from a file or user input)
-    text = """
-    The intellectual property lawyer specializes in patent law and copyright infringement cases.
-    She also handles trademark disputes and trade secret litigation. Recently, she's been working
-    on a high-profile case involving software licensing and open source compliance.
-    """
-
-    # Extract entities
-    entities = extractor.extract_entities(text)
-    logger.info(f"Extracted {len(entities)} entities")
-
-    # Match entities
-    matched_entities = extractor.match_entities(entities, ontology_entities)
-
-    # Separate matched and unmatched entities
-    matched = []
-    unmatched = []
-    for entity in matched_entities:
-        if entity[4] is not None:  # entity[4] is the match (IRI)
-            matched.append(entity)
-        else:
-            unmatched.append(entity)
-
-    # Print results for matched entities
-    print("\nMatched entities:")
-    for entity, start, end, entity_type, match, similarity, match_type in matched:
-        print(
-            f"- {entity} ({start}, {end}) [{entity_type}]: {match} (similarity: {similarity:.2f}, match type: {match_type})"
-        )
-
-    # Print additional context for matched entities
-    print("\nAdditional context for matched entities:")
-    for entity, _, _, _, match, _, _ in matched:
-        ont_entity = ontology_entities[match]
-        print(f"- {entity}:")
-        print(f"  IRI: {match}")
-        print(f"  Label: {ont_entity.get('rdfs:label', 'N/A')}")
-        print(f"  Description: {ont_entity.get('description', 'N/A')}")
-
-    # Print information about unmatched entities
-    print("\nUnmatched entities:")
-    for entity, start, end, entity_type, _, similarity, _ in unmatched:
-        print(
-            f"- {entity} ({start}, {end}) [{entity_type}] (best similarity: {similarity:.2f})"
-        )
-
-    # Print statistics
-    print(f"\nTotal entities extracted: {len(entities)}")
-    print(f"Matched entities: {len(matched)}")
-    print(f"Unmatched entities: {len(unmatched)}")
+    logger.info(f"Full results saved to {args.output}")
 
 
 if __name__ == "__main__":

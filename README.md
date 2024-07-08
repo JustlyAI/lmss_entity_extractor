@@ -58,7 +58,7 @@ To get started with the SALI-E - Legal Matter Specification Standard Entity Reco
 
 python -m spacy download en_core_web_sm
 
-python -m spacy download en_core_web_trf
+python -m spacy download en_core_web_trf (alt optional)
 
 What other downloads are useful
 

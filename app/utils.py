@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # URL of the OWL ontology
     ontology_url = "https://github.com/sali-legal/LMSS/blob/main/LMSS.owl?raw=true"
     # Path to save the downloaded OWL file
-    save_path = "LMSS.owl"
+    save_path = "lmss/LMSS.owl"
 
     # Download the ontology
     download_ontology(ontology_url, save_path)

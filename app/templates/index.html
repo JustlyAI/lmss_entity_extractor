@@ -3,34 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALI-E - Legal Matter Specification Standard Entity Recognizer</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>SALI-E: Legal Matter Specification Standard Entity Recognizer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-6 text-center">SALI-E - Legal Matter Specification Standard Entity Recognizer</h1>
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2">Text</h2>
-            <textarea id="input-text" class="w-full h-32 p-2 border rounded" placeholder="Enter your text here..."></textarea>
-            <button id="submit-btn" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
-        </div>
-        <div>
-            <h2 class="text-xl font-semibold mb-2">Recognized Entities</h2>
-            <table id="output-table" class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border p-2">Start</th>
-                        <th class="border p-2">End</th>
-                        <th class="border p-2">Text</th>
-                        <th class="border p-2">Entity</th>
-                        <th class="border p-2">IRI</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">SALI-E: Legal Matter Specification Standard Entity Recognizer</h1>
+        
+        <div class="flex">
+            <!-- Sidebar -->
+            <div class="w-1/4 pr-4">
+                <h2 class="text-xl font-semibold mb-4">Search Ontology</h2>
+                <input type="text" id="search-input" class="w-full p-2 border rounded mb-2" placeholder="Search...">
+                <button id="search-button" class="w-full bg-blue-500 text-white p-2 rounded">Search</button>
+                <div id="search-results" class="mt-4"></div>
+            </div>
+            
+            <!-- Main content -->
+            <div class="w-3/4">
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">Input Text</h2>
+                    <textarea id="input-text" class="w-full h-32 p-2 border rounded" placeholder="Enter your text here..."></textarea>
+                </div>
+                
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">Or Upload File</h2>
+                    <input type="file" id="file-upload" class="mb-2">
+                </div>
+                
+                <div class="mb-4">
+                    <h2 class="text-xl font-semibold mb-2">Select Ontology Classes</h2>
+                    <select id="class-select" multiple class="w-full p-2 border rounded"></select>
+                </div>
+                
+                <button id="process-button" class="bg-green-500 text-white p-2 rounded">Process</button>
+                
+                <div class="mt-8">
+                    <h2 class="text-xl font-semibold mb-2">Results</h2>
+                    <table id="results-table" class="w-full border-collapse border">
+                        <thead>
+                            <tr>
+                                <th class="border p-2">Text</th>
+                                <th class="border p-2">Start</th>
+                                <th class="border p-2">End</th>
+                                <th class="border p-2">Matching Class</th>
+                                <th class="border p-2">IRI</th>
+                                <th class="border p-2">Match Type</th>
+                                <th class="border p-2">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <button id="download-button" class="mt-4 bg-blue-500 text-white p-2 rounded" style="display: none;">Download Results</button>
+            </div>
         </div>
     </div>
-    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+    
+    <script src="/static/js/main.js"></script>
 </body>
 </html>

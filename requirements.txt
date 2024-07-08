@@ -12,3 +12,4 @@ spacy
 scikit-learn
 fuzzywuzzy
 python-Levenshtein
+nltk
