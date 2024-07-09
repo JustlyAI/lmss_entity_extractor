@@ -101,7 +101,7 @@ def check_lmss_status():
             lmss_parser = OntologyParser(ONTOLOGY_PATH, model=sentence_transformer)
             extractor = EntityExtractor()
             classifier = OntologyClassifier(
-                GRAPH_PATH, INDEX_PATH, similarity_threshold=0.7
+                GRAPH_PATH, INDEX_PATH, TOP_CLASSES_PATH, similarity_threshold=0.7
             )
             searcher = LMSSSearch(
                 INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH

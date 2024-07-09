@@ -113,6 +113,10 @@ function clearAllClasses() {
 async function processDocument() {
     const text = textInput.value;
     const selectedClasses = Array.from(document.querySelectorAll('input[name="lmss-class"]:checked')).map(input => input.value);
+    
+    // Show loading state
+    resultsTable.innerHTML = '<p>Processing document...</p>';
+    
     try {
         const response = await fetch(`${API_BASE_URL}/document/process`, {
             method: 'POST',
@@ -121,10 +125,18 @@ async function processDocument() {
             },
             body: JSON.stringify({ text, selected_classes: selectedClasses })
         });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        classificationResults = await response.json();
+
+        const data = await response.json();
+        
+        if (!data || !data.results) {
+            throw new Error('Invalid response data');
+        }
+
+        classificationResults = data;
         displayResults(classificationResults.results);
     } catch (error) {
         console.error('Error processing document:', error);
@@ -133,6 +145,11 @@ async function processDocument() {
 }
 
 function displayResults(results) {
+    if (!Array.isArray(results) || results.length === 0) {
+        resultsTable.innerHTML = '<p>No results found</p>';
+        return;
+    }
+
     resultsTable.innerHTML = `
         <table>
             <tr>
@@ -149,10 +166,10 @@ function displayResults(results) {
                     <td>${entity.start}</td>
                     <td>${entity.end}</td>
                     <td>${entity.text}</td>
-                    <td>${entity.match.branch || ''}</td>
-                    <td>${entity.match.label || ''}</td>
-                    <td>${entity.match.similarity ? entity.match.similarity.toFixed(2) + ' (' + entity.match.match_type + ')' : ''}</td>
-                    <td>${entity.match.iri || ''}</td>
+                    <td>${entity.branch || 'N/A'}</td>
+                    <td>${entity.label || 'N/A'}</td>
+                    <td>${entity.score ? entity.score.toFixed(2) : 'N/A'}</td>
+                    <td>${entity.iri || 'N/A'}</td>
                 </tr>
             `).join('')}
         </table>

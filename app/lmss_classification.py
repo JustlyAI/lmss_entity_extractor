@@ -13,13 +13,17 @@ logger = logging.getLogger(__name__)
 
 class OntologyClassifier:
     def __init__(
-        self, graph_path: str, index_path: str, similarity_threshold: float = 0.65
+        self,
+        graph_path: str,
+        index_path: str,
+        top_classes_path: str,
+        similarity_threshold: float = 0.65,
     ):
         self.graph = Graph()
         self.graph.parse(graph_path, format="turtle")
         self.ontology_entities = self._load_ontology_index(index_path)
+        self.top_classes = self._load_top_classes(top_classes_path)
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.top_classes = self._get_top_classes()
         self.similarity_threshold = similarity_threshold
         self.LMSS = Namespace("http://lmss.sali.org/")
         logger.info(f"Loaded {len(self.ontology_entities)} ontology entities")
@@ -31,15 +35,11 @@ class OntologyClassifier:
         logger.info(f"Loaded {len(data)} entities from index")
         return data
 
-    def _get_top_classes(self) -> Dict[str, str]:
-        top_classes = {}
-        for entity in self.ontology_entities:
-            if (
-                "subClassOf" in entity
-                and len(entity["subClassOf"]) == 1
-                and entity["subClassOf"][0] == "http://www.w3.org/2002/07/owl#Thing"
-            ):
-                top_classes[entity["rdf_about"]] = entity["rdfs_label"]
+    def _load_top_classes(self, top_classes_path: str) -> Dict[str, str]:
+        with open(top_classes_path, "r") as f:
+            top_classes_data = json.load(f)
+        top_classes = {cls["iri"]: cls["label"] for cls in top_classes_data}
+        logger.info(f"Loaded {len(top_classes)} top classes from {top_classes_path}")
         return top_classes
 
     def _cosine_similarity(self, v1: np.ndarray, v2: np.ndarray) -> float:
@@ -186,7 +186,7 @@ class OntologyClassifier:
         logger.warning(f"No branch found for entity: {entity_iri}")
         return "Unknown"
 
-    def print_ontology_sample(self, n: int = 5):
+    def print_ontology_saxqmple(self, n: int = 5):
         logger.info(f"Sample of {n} ontology entities:")
         for entity in self.ontology_entities[:n]:
             logger.info(f"Label: {entity['rdfs_label']}, IRI: {entity['rdf_about']}")
