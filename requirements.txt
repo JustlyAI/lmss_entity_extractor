@@ -15,4 +15,4 @@ python-Levenshtein
 nltk
 
 PyPDF2
-docx
+python-docx

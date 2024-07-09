@@ -35,8 +35,9 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
-        #results-table, #search-results {
+        #results-table {
             margin-top: 20px;
+            overflow-x: auto;
         }
         table {
             width: 100%;
@@ -45,9 +46,39 @@
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
+            text-align: left;
         }
         th {
             background-color: #f2f2f2;
+        }
+        #lmss-class-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .class-column {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        .class-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .class-item input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        #class-selection-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        #text-input-message, #file-upload-message {
+            margin-top: 5px;
+            color: green;
         }
     </style>
 </head>
@@ -65,11 +96,18 @@
     <div id="main-content">
         <h2>Classifier</h2>
         <textarea id="text-input" rows="10" cols="50" placeholder="Enter text here..."></textarea>
+        <div id="text-input-message"></div>
         <br>
-        <input type="file" id="file-input">
+        <input type="file" id="file-input" accept=".txt,.pdf,.doc,.docx">
+        <span id="file-upload-message"></span>
         <br>
-        <div id="lmss-class-selection"></div>
         <button id="process-document" disabled>Process Document</button>
+        <br>
+        <div id="class-selection-controls">
+            <button id="select-all-classes">Select All</button>
+            <button id="clear-all-classes">Clear All</button>
+        </div>
+        <div id="lmss-class-selection"></div>
         <div id="results-table"></div>
         <button id="download-json" class="hidden">Download JSON</button>
     </div>

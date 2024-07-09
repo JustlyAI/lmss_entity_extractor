@@ -1,6 +1,6 @@
 import json
 import logging
-from app.lmss_classification import OntologyMatcher
+from app.lmss_classification import OntologyClassifier
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -9,13 +9,38 @@ logger = logging.getLogger(__name__)
 def run_classifier():
     # Load extracted data
     logger.info("Loading extracted data from app/lmss/extraction_results.json")
-    with open("app/lmss/extraction_results.json", "r") as f:
-        extracted_data = json.load(f)
+    try:
+        with open("app/lmss/extraction_results.json", "r") as f:
+            extracted_data = json.load(f)
+        logger.info(f"Loaded {len(extracted_data)} extracted entities")
+    except FileNotFoundError:
+        logger.error(
+            "extraction_results.json not found. Please run the extraction process first."
+        )
+        return
+    except json.JSONDecodeError:
+        logger.error(
+            "Error decoding extraction_results.json. The file may be corrupted."
+        )
+        return
 
-    # Initialize the matcher
-    matcher = OntologyMatcher(
-        graph_path="app/lmss/lmss_graph.ttl", index_path="app/lmss/lmss_index.json"
-    )
+    if not extracted_data:
+        logger.warning("No extracted entities found in extraction_results.json")
+        return
+
+    # Initialize the matcher with a lower similarity threshold
+    try:
+        matcher = OntologyClassifier(
+            graph_path="app/lmss/lmss_graph.ttl",
+            index_path="app/lmss/lmss_index.json",
+            similarity_threshold=0.3,  # Lower threshold for more matches
+        )
+    except Exception as e:
+        logger.error(f"Error initializing OntologyClassifier: {str(e)}")
+        return
+
+    # Print a sample of ontology entities
+    matcher.print_ontology_sample(5)
 
     # Match and classify entities
     logger.info("Matching and classifying entities")
@@ -28,30 +53,14 @@ def run_classifier():
 
     # Print summary
     print("Matching and Classification Summary:")
-    total_entities = len(results)
-    print(f"Total entities processed: {total_entities}")
-
-    match_types = {}
-    for entity in results:
-        match_type = entity["match"]["match_type"]
-        match_types[match_type] = match_types.get(match_type, 0) + 1
-
-    for match_type, count in match_types.items():
-        print(f"{match_type.capitalize()} entities: {count}")
+    print(f"Total entities processed: {len(extracted_data)}")
+    print(f"Total entities matched: {len(results)}")
 
     print("\nSample Matched Entities:")
     for entity in results[:10]:  # Print first 10 entities as a sample
-        match = entity["match"]
         print(
-            f"- {entity['text']} -> {match['iri']} (Label: {match['label']}) ({match['match_type']}, similarity: {match['similarity']:.2f})"
+            f"- {entity['text']} -> {entity['label']} (Branch: {entity['branch']}, Score: {entity['score']:.2f}, IRI: {entity['iri']})"
         )
-        if "classification" in entity:
-            hierarchy = " -> ".join(
-                [f"{cls[0]} ({cls[1]:.2f})" for cls in entity["classification"]]
-            )
-            print(f"  Hierarchy: {hierarchy}")
-        else:
-            print("  No classification available")
 
     logger.info("Full results saved to app/lmss/matching_results.json")
 

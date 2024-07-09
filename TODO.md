@@ -145,7 +145,46 @@ SALI-E is an open-source software project that applies the Legal Matter Standard
   2.4.2. Ensure proper styling and consistent look across all sections
   2.4.3. Implement smooth transitions for retractable sections
   2.4.4. Add loading indicators for asynchronous operations
-  2.4.5. Implement error handling and user feedback mechanisms
+  2.4.5. Implement error handling and user feedback mechanism
+
+  ## Project Structure
+
+```
+sali-e/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── lmss_parser.py
+│   ├── lmss_classification.py
+│   ├── lmss_search.py
+│   ├── entity_extraction.py
+│   ├── run_parser.py
+│   ├── run_extraction.py
+│   ├── run_classifier.py
+│   ├── run_search.py
+│   ├── lmss/
+│   │   ├── LMSS.owl
+│   │   ├── lmss_index.json
+│   │   ├── lmss_graph.ttl
+│   │   ├── lmss_hash.txt
+│   │   ├── extraction_results.json
+│   │   ├── matching_results.json
+│   │   └── top_classes.json
+|   ├── static/
+│       └── js/
+│           └── main.js
+|   ├── templates/
+│      └── index.html
+├── tests/
+│   ├── test_parser.py
+│   ├── test_entities.py
+│   ├── test_matcher.py
+│   └── test_classifier.py
+│   └── test_embeddings.py
+├── requirements.txt
+├── README.md
+└── Dockerfile
+```
 
 #### Next Steps (deferred)
 
@@ -189,45 +228,6 @@ SALI-E is an open-source software project that applies the Legal Matter Standard
 2.8.2. Implement end-to-end tests for user workflows
 2.8.3. Perform cross-browser testing
 2.8.4. Conduct usability testing with potential users
-
-## Project Structure
-
-```
-sali-e/
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── lmss_parser.py
-│   ├── lmss_classification.py
-│   ├── lmss_search.py
-│   ├── entity_extraction.py
-│   ├── run_parser.py
-│   ├── run_extraction.py
-│   ├── run_classifier.py
-│   ├── run_search.py
-│   ├── lmss/
-│   │   ├── LMSS.owl
-│   │   ├── lmss_index.json
-│   │   ├── lmss_graph.ttl
-│   │   ├── lmss_hash.txt
-│   │   ├── extraction_results.json
-│   │   ├── matching_results.json
-│   │   └── top_classes.json
-|   ├── static/
-│       └── js/
-│           └── main.js
-|   ├── templates/
-│      └── index.html
-├── tests/
-│   ├── test_parser.py
-│   ├── test_entities.py
-│   ├── test_matcher.py
-│   └── test_classifier.py
-│   └── test_embeddings.py
-├── requirements.txt
-├── README.md
-└── Dockerfile
-```
 
 ##### Previously...
 

@@ -1,4 +1,3 @@
-// API base URL
 const API_BASE_URL = 'http://localhost:8000/api';
 
 // DOM Elements
@@ -11,14 +10,19 @@ const downloadGraphButton = document.getElementById('download-graph');
 const textInput = document.getElementById('text-input');
 const fileInput = document.getElementById('file-input');
 const lmssClassSelection = document.getElementById('lmss-class-selection');
+const selectAllClassesButton = document.getElementById('select-all-classes');
+const clearAllClassesButton = document.getElementById('clear-all-classes');
 const processDocumentButton = document.getElementById('process-document');
 const resultsTable = document.getElementById('results-table');
 const downloadJsonButton = document.getElementById('download-json');
 const searchInput = document.getElementById('search-input');
 const classFilter = document.getElementById('class-filter');
 const searchResults = document.getElementById('search-results');
+const textInputMessage = document.getElementById('text-input-message');
+const fileUploadMessage = document.getElementById('file-upload-message');
 
-// Fetch LMSS status
+let classificationResults = null;
+
 async function fetchLmssStatus() {
     const response = await fetch(`${API_BASE_URL}/lmss/status`);
     const data = await response.json();
@@ -27,28 +31,25 @@ async function fetchLmssStatus() {
         lmssStatus.style.color = 'green';
         lmssStatus.textContent = 'LMSS Ready!';
         updateLmssButton.disabled = false;
-        processDocumentButton.disabled = false;
         downloadIndexButton.disabled = false;
         downloadGraphButton.disabled = false;
-        fetchLmssClasses(); // Activate class filter elements
+        fetchLmssClasses();
     } else if (data.status === 'processing') {
         lmssStatus.style.color = 'orange';
         lmssStatus.textContent = 'LMSS Status: Processing...';
         updateLmssButton.disabled = true;
-        processDocumentButton.disabled = true;
         downloadIndexButton.disabled = true;
         downloadGraphButton.disabled = true;
     } else {
         lmssStatus.style.color = 'red';
         lmssStatus.textContent = 'Get LMSS';
         updateLmssButton.disabled = false;
-        processDocumentButton.disabled = true;
         downloadIndexButton.disabled = true;
         downloadGraphButton.disabled = true;
     }
+    updateProcessDocumentButton();
 }
 
-// Update LMSS
 async function updateLmss() {
     lmssProgress.classList.remove('hidden');
     const response = await fetch(`${API_BASE_URL}/lmss/update`, { method: 'POST' });
@@ -57,7 +58,6 @@ async function updateLmss() {
     fetchLmssStatus();
 }
 
-// Fetch LMSS statistics
 async function fetchLmssStatistics() {
     const response = await fetch(`${API_BASE_URL}/lmss/statistics`);
     const data = await response.json();
@@ -68,21 +68,30 @@ async function fetchLmssStatistics() {
     `;
 }
 
-// Download LMSS files
 async function downloadLmssFile(fileType) {
     window.location.href = `${API_BASE_URL}/lmss/download/${fileType}`;
 }
 
-// Fetch LMSS classes
 async function fetchLmssClasses() {
     const response = await fetch(`${API_BASE_URL}/lmss/classes`);
     const classes = await response.json();
-    lmssClassSelection.innerHTML = classes.map(cls => `
-        <label>
-            <input type="checkbox" name="lmss-class" value="${cls.iri}">
-            ${cls.label} (${cls.entities_count})
-        </label>
-    `).join('<br>');
+    
+    const columns = Math.ceil(classes.length / 6);
+    let html = '';
+    for (let i = 0; i < columns; i++) {
+        html += '<div class="class-column">';
+        for (let j = i * 6; j < Math.min((i + 1) * 6, classes.length); j++) {
+            const cls = classes[j];
+            html += `
+                <div class="class-item">
+                    <input type="checkbox" name="lmss-class" value="${cls.iri}" checked>
+                    <label>${cls.label} (${cls.entities_count})</label>
+                </div>
+            `;
+        }
+        html += '</div>';
+    }
+    lmssClassSelection.innerHTML = html;
     
     // Populate class filter dropdown
     classFilter.innerHTML = `
@@ -91,22 +100,38 @@ async function fetchLmssClasses() {
     `;
 }
 
-// Process document
+function selectAllClasses() {
+    const checkboxes = document.querySelectorAll('input[name="lmss-class"]');
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+}
+
+function clearAllClasses() {
+    const checkboxes = document.querySelectorAll('input[name="lmss-class"]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+}
+
 async function processDocument() {
     const text = textInput.value;
     const selectedClasses = Array.from(document.querySelectorAll('input[name="lmss-class"]:checked')).map(input => input.value);
-    const response = await fetch(`${API_BASE_URL}/document/process`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text, selectedClasses })
-    });
-    const data = await response.json();
-    displayResults(data.results);
+    try {
+        const response = await fetch(`${API_BASE_URL}/document/process`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text, selected_classes: selectedClasses })
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        classificationResults = await response.json();
+        displayResults(classificationResults.results);
+    } catch (error) {
+        console.error('Error processing document:', error);
+        resultsTable.innerHTML = `<p>Error processing document: ${error.message}</p>`;
+    }
 }
 
-// Display results
 function displayResults(results) {
     resultsTable.innerHTML = `
         <table>
@@ -116,7 +141,7 @@ function displayResults(results) {
                 <th>Text</th>
                 <th>Branch</th>
                 <th>Label</th>
-                <th>Score</th>
+                <th>Score + Explain</th>
                 <th>IRI</th>
             </tr>
             ${results.map(entity => `
@@ -126,7 +151,7 @@ function displayResults(results) {
                     <td>${entity.text}</td>
                     <td>${entity.match.branch || ''}</td>
                     <td>${entity.match.label || ''}</td>
-                    <td>${entity.match.similarity?.toFixed(2) || ''}</td>
+                    <td>${entity.match.similarity ? entity.match.similarity.toFixed(2) + ' (' + entity.match.match_type + ')' : ''}</td>
                     <td>${entity.match.iri || ''}</td>
                 </tr>
             `).join('')}
@@ -135,7 +160,6 @@ function displayResults(results) {
     downloadJsonButton.classList.remove('hidden');
 }
 
-// Search LMSS
 async function searchLmss() {
     const query = searchInput.value;
     const classFilterValue = classFilter.value;
@@ -144,7 +168,6 @@ async function searchLmss() {
     displaySearchResults(data.results);
 }
 
-// Display search results
 function displaySearchResults(results) {
     searchResults.innerHTML = `
         <table>
@@ -166,37 +189,66 @@ function displaySearchResults(results) {
     `;
 }
 
-// Handle file upload
-fileInput.addEventListener('change', async (event) => {
+async function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await fetch(`${API_BASE_URL}/document/upload`, {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        textInput.value = data.text;
+        try {
+            const response = await fetch(`${API_BASE_URL}/document/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            textInput.value = data.text;
+            fileUploadMessage.textContent = 'File uploaded successfully';
+            updateProcessDocumentButton();
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            fileUploadMessage.textContent = `Error uploading file: ${error.message}`;
+        }
     }
-});
+}
+
+function updateProcessDocumentButton() {
+    processDocumentButton.disabled = !(lmssStatus.textContent === 'LMSS Ready!' && (textInput.value.trim() !== '' || fileInput.files.length > 0));
+}
+
+function handleTextInput(event) {
+    if (event.key === 'Enter') {
+        textInputMessage.textContent = 'Your text has been received';
+    }
+    updateProcessDocumentButton();
+}
+
+function downloadJsonResults() {
+    if (classificationResults) {
+        const dataStr = JSON.stringify(classificationResults, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportFileDefaultName = 'classification_results.json';
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+}
 
 // Event listeners
 updateLmssButton.addEventListener('click', updateLmss);
 downloadIndexButton.addEventListener('click', () => downloadLmssFile('index'));
 downloadGraphButton.addEventListener('click', () => downloadLmssFile('graph'));
+selectAllClassesButton.addEventListener('click', selectAllClasses);
+clearAllClassesButton.addEventListener('click', clearAllClasses);
 processDocumentButton.addEventListener('click', processDocument);
 searchInput.addEventListener('input', searchLmss);
 classFilter.addEventListener('change', searchLmss);
-downloadJsonButton.addEventListener('click', () => {
-    const dataStr = JSON.stringify(JSON.parse(resultsTable.innerHTML), null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'classification_results.json';
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-});
+downloadJsonButton.addEventListener('click', downloadJsonResults);
+fileInput.addEventListener('change', handleFileUpload);
+textInput.addEventListener('input', updateProcessDocumentButton);
+textInput.addEventListener('keypress', handleTextInput);
 
 // Initial fetch calls
 fetchLmssStatus();
