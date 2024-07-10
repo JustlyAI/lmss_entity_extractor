@@ -1,4 +1,4 @@
-# SALI-E: Legal Matter Specification Standard Entity Recognizer - Updated Project Plan
+# SALI-E: Legal Matter Specification Standard Entity Recognizer
 
 ## Project Overview
 
@@ -8,50 +8,67 @@ SALI-E is an open-source software project that applies the Legal Matter Standard
 
 ### Completed Tasks
 
-1. Ontology Analysis and Preprocessing
+1. **Ontology Analysis and Preprocessing**
 
-   - Implemented `LMSSOntologyParser` class
+   - Implemented `OntologyParser` class in `lmss_parser.py`
    - Created searchable index with vector embeddings
    - Identified high-level parent classes
    - Implemented efficient storage and retrieval
    - Added retry mechanism for ontology processing
    - Ensured consistency between JSON index and RDF graph
 
-2. Entity Extraction and Classification Process
+2. **Entity Extraction and Classification Process**
 
-   - Implemented `EntityExtractor` class using spaCy
+   - Implemented `EntityExtractor` class in `entity_extraction.py` using spaCy
    - Integrated NER, noun phrase extraction, and keyword extraction (TF-IDF)
    - Implemented entity merging and deduplication
    - Generated vector embeddings for entities
 
-3. Ontology Matching
+3. **Ontology Matching and Classification**
 
-   - Implemented `EnhancedOntologyMatcher` class
+   - Implemented `OntologyClassifier` class in `lmss_classification.py`
    - Developed context-aware matching algorithm
    - Implemented multiple matching techniques (semantic, fuzzy, context)
    - Added graph-based matching
    - Implemented fallback mechanisms for unmatched terms
-
-4. Hierarchical Classification
-
    - Implemented ontology hierarchy traversal
    - Generated confidence scores for hierarchical classifications
    - Provided full hierarchical path for matched entities
 
-5. Search Functionality
+4. **Search Functionality**
 
-   - Implemented `LMSSSearch` class
+   - Implemented `LMSSSearch` class in `lmss_search.py`
    - Integrated regex, fuzzy, and vector search capabilities
 
-6. Scripts and Utilities
+5. **API Development (FastAPI)**
 
-   - Created `run_parser.py` for ontology processing
-   - Developed `run_extraction.py` for entity extraction
-   - Implemented `run_classifier.py` for matching and classification
-   - Added `run_search.py` for interactive ontology exploration
+   - Set up FastAPI application structure in `main.py`
+   - Implemented CORS middleware for frontend integration
+   - Implemented LMSS Ontology Management Endpoints
+   - Implemented Document Processing Endpoints
+   - Implemented LMSS Class Selection Endpoints
+   - Implemented Search and Exploration Endpoints
+   - Added basic error handling and validation
 
-7. Testing
-   - Developed comprehensive test suite for ontology parsing and consistency checking
+6. **Front-End Development (HTML/JavaScript)**
+
+   - Implemented basic structure for the three-panel layout (Left Nav, Classifier, Explorer)
+   - Created "Legal Matter Specification Standard" header
+   - Added LMSS status indicators and "Download / Update" button
+   - Implemented LMSS Statistics section
+   - Created text input area and file upload functionality for document processing
+   - Developed LMSS Class selection interface with "Select All" and "Clear All" buttons
+   - Implemented results table for classification output
+   - Added "Download JSON" button for classification results
+   - Implemented "Key Word Search" and class filter in the Explorer section
+
+7. **Docker Integration**
+
+   - Created Dockerfile for containerized deployment
+   - Implemented docker-compose.yml for easy setup and deployment
+
+8. **Testing**
+   - Developed initial test suite for ontology parsing and consistency checking
 
 ### Partially Implemented
 
@@ -60,94 +77,13 @@ SALI-E is an open-source software project that applies the Legal Matter Standard
    - Basic filtering mechanism implemented in `LMSSSearch`
 
 2. Confidence Scoring
-   - Initial implementation in `EnhancedOntologyMatcher`
 
-## Upcoming Tasks
+   - Initial implementation in `OntologyClassifier`
 
-### 1. API Development (FastAPI)
+3. Error Handling and Validation
+   - Basic implementation in FastAPI endpoints
 
-1.1. Set up FastAPI application structure
-
-- Create main.py with FastAPI app initialization
-- Implement CORS middleware for frontend integration
-- Set up dependency injection for shared resources
-
-  1.2. Implement LMSS Ontology Management Endpoints
-  1.2.1. GET /api/lmss/status - Return current LMSS status (ready, not ready, updating) - Serve: Left Nav status indicators (2.1.2)
-  1.2.2. POST /api/lmss/update - Trigger LMSS ontology download and update process - Serve: "Download / Update" button (2.1.3)
-  1.2.3. GET /api/lmss/statistics - Return LMSS statistics (branches, classes, attributes with embeddings) - Serve: LMSS Statistics section (2.1.5)
-  1.2.4. GET /api/lmss/download/{file_type} - Download LMSS index or graph file - Serve: "Download Index" and "Download Graph" buttons (2.1.6)
-
-  1.3. Implement Document Processing Endpoints
-  1.3.1. POST /api/document/upload - Handle document upload and text extraction - Serve: "Single Document Uploader" button (2.2.2)
-  1.3.2. POST /api/document/process - Process document text, extract entities, and classify - Serve: Text input area and classification process (2.2.1, 2.2.3, 2.2.4)
-
-  1.4. Implement LMSS Class Selection Endpoints
-  1.4.1. GET /api/lmss/classes - Retrieve top-level LMSS classes with entity counts - Serve: LMSS Class selection interface (2.2.3)
-  1.4.2. POST /api/lmss/filter - Apply selected class filters to classification process - Serve: LMSS Class selection interface (2.2.3)
-
-  1.5. Implement Search and Exploration Endpoints
-  1.5.1. GET /api/search - Perform keyword search on LMSS ontology - Serve: Explorer "Key Word Search" (2.3.1, 2.3.3)
-  1.5.2. GET /api/search/filter - Apply class filter to search results - Serve: Explorer class filter dropdown (2.3.2)
-
-  1.6. Implement Error Handling and Validation
-  1.6.1. Create custom exception handlers for common errors
-  1.6.2. Implement request body validation using Pydantic models
-  1.6.3. Add proper error responses with meaningful messages
-
-### 2. Front-End Development (HTML/JavaScript)
-
-2.1. Retractable Left Nav
-2.1.1. Implement "Legal Matter Specification Standard" header
-2.1.2. Add "LMSS Ready!" and "Get LMSS" status indicators
-2.1.3. Create "Download / Update" button for LMSS ontology
-2.1.4. Display "Preparing LMSS" progress indicator
-2.1.5. Implement LMSS Statistics section
-
-- Show number of branches (top classes)
-- Display number of classes
-- Show number of attributes with embeddings
-  2.1.6. Add "Download Index" and "Download Graph" buttons
-  2.1.7. Implement retractable functionality for left nav
-
-  2.2. Classifier (Main Section - Always Open)
-  2.2.1. Create large text input area for document content
-  2.2.2. Implement "Single Document Uploader" button
-  2.2.3. Develop LMSS Class selection interface
-
-- Display top-level LMSS classes with entity counts
-- Add checkboxes for each class
-- Implement "Select All" and "Clear All" buttons
-- Add helper text: "Select the classes you hope to classify by"
-  2.2.4. Create results table with columns:
-- Start
-- End
-- Text
-- Branch
-- Label
-- Score + Explain for top-k
-- IRI
-  2.2.5. Add "Download JSON" button for classification results
-
-  2.3. Explorer (Right Section - Make retractable)
-  2.3.1. Implement "Key Word Search" input field
-  2.3.2. Add class filter dropdown
-  2.3.3. Create search output area with columns:
-
-- Branch
-- Label
-- Score + Explain all hits
-- IRI
-  2.3.4. Add placeholder for future Q&A Bot integration
-
-  2.4. General Layout and Functionality
-  2.4.1. Implement responsive design for different screen sizes
-  2.4.2. Ensure proper styling and consistent look across all sections
-  2.4.3. Implement smooth transitions for retractable sections
-  2.4.4. Add loading indicators for asynchronous operations
-  2.4.5. Implement error handling and user feedback mechanism
-
-  ## Project Structure
+## Project Structure
 
 ```
 sali-e/
@@ -158,121 +94,172 @@ sali-e/
 │   ├── lmss_classification.py
 │   ├── lmss_search.py
 │   ├── entity_extraction.py
-│   ├── run_parser.py
-│   ├── run_extraction.py
-│   ├── run_classifier.py
-│   ├── run_search.py
 │   ├── lmss/
 │   │   ├── LMSS.owl
 │   │   ├── lmss_index.json
 │   │   ├── lmss_graph.ttl
 │   │   ├── lmss_hash.txt
-│   │   ├── extraction_results.json
-│   │   ├── matching_results.json
-│   │   └── top_classes.json
-|   ├── static/
-│       └── js/
-│           └── main.js
-|   ├── templates/
-│      └── index.html
+│   │   ├── top_classes.json
+│   │   └── lmss_stats.json
+│   ├── static/
+│   │   └── js/
+│   │       └── main.js
+│   └── templates/
+│       └── index.html
 ├── tests/
 │   ├── test_parser.py
 │   ├── test_entities.py
 │   ├── test_matcher.py
-│   └── test_classifier.py
+│   ├── test_classifier.py
 │   └── test_embeddings.py
 ├── requirements.txt
 ├── README.md
-└── Dockerfile
+├── Dockerfile
+└── docker-compose.yml
 ```
-
-#### Next Steps (deferred)
-
-##### API Next Steps
-
-1.7. Implement API Documentation
-1.7.1. Add docstrings to all API endpoints
-1.7.2. Configure Swagger UI for interactive API documentation
-1.7.3. Include example requests and responses in the documentation
-
-1.8. Optimize API Performance
-1.8.1. Implement caching for frequently accessed data
-1.8.2. Use background tasks for long-running processes
-1.8.3. Implement pagination for large result sets
-
-1.9. Implement WebSocket for Real-time Updates
-1.9.1. Set up WebSocket connection for LMSS update progress
-1.9.2. Implement real-time updates for classification process
-
-1.10. Security Measures
-1.10.1. Implement rate limiting to prevent abuse
-1.10.2. Add authentication for sensitive endpoints (if required)
-1.10.3. Implement proper input sanitization to prevent injection attacks
-
-##### Front-End Next Steps
-
-2.6. Performance Optimization
-2.6.1. Implement lazy loading for large result sets
-2.6.2. Optimize rendering of large tables
-2.6.3. Implement caching mechanisms for frequently accessed data
-2.6.4. Minimize API calls by batching requests where possible
-
-2.7. Accessibility and Usability
-2.7.1. Ensure proper keyboard navigation
-2.7.2. Implement ARIA attributes for screen reader compatibility
-2.7.3. Add tooltips and help text for complex features
-2.7.4. Ensure color contrast meets accessibility standards
-
-2.8. Testing and Quality Assurance
-2.8.1. Develop unit tests for front-end components
-2.8.2. Implement end-to-end tests for user workflows
-2.8.3. Perform cross-browser testing
-2.8.4. Conduct usability testing with potential users
-
-##### Previously...
-
-2.5. Integration with Backend
-2.5.1. Connect LMSS download/update functionality to LMSSOntologyParser
-2.5.2. Integrate text input and document upload with EntityExtractor
-2.5.3. Link LMSS class selection with OntologyMatcher filtering
-2.5.4. Connect classification results display with LMSSClassification output
-2.5.5. Integrate Explorer search functionality with LMSSSearch
-2.5.6. Implement real-time updates for LMSS statistics
-
-### 7. Visualization (To be implemented - Later - Deferred)
-
-7.1. Create a visual representation of extracted entities:
-
-- Show their place in the ontology hierarchy
-- Display relationships to other entities using a force-directed graph layout
-- Implement zooming and panning features for large ontologies
-
-### 3. Integration and Testing
-
-3.1. Integrate FastAPI backend with front-end
-3.2. Implement end-to-end testing of the entire pipeline
-3.3. Perform stress testing and optimize performance
-3.4. Conduct user acceptance testing
-
-### 4. Documentation and Deployment
-
-4.1. Write comprehensive API documentation
-4.2. Create user guide for the web interface
-4.3. Update README.md with project overview, installation, and usage instructions
-4.4. Prepare Dockerfile for containerized deployment
-4.5. Set up continuous integration and deployment (CI/CD) pipeline
-
-### 5. Final Polishing and Open-Source Release
-
-5.1. Refactor code for clarity and maintainability
-5.2. Ensure code comments and docstrings are comprehensive
-5.3. Review and update all documentation
-5.4. Prepare the project for open-source release on GitHub
-5.5. Choose and apply an appropriate open-source license (e.g., MIT License)
 
 ## Next Steps
 
-1. Begin implementation of the FastAPI application structure
-2. Start designing the front-end interface
-3. Continue refining the matching and classification algorithms based on real-world testing
-4. Plan for scalability and performance optimization
+### 1. API Development (FastAPI)
+
+1.1. Enhance Error Handling and Validation
+
+- Create custom exception handlers for common errors
+- Implement comprehensive request body validation using Pydantic models
+- Add proper error responses with meaningful messages
+
+1.2. Implement API Documentation
+
+- Add docstrings to all API endpoints
+- Configure Swagger UI for interactive API documentation
+- Include example requests and responses in the documentation
+
+1.3. Optimize API Performance
+
+- Implement caching for frequently accessed data
+- Use background tasks for long-running processes
+- Implement pagination for large result sets
+
+1.4. Implement WebSocket for Real-time Updates
+
+- Set up WebSocket connection for LMSS update progress
+- Implement real-time updates for classification process
+
+1.5. Enhance Security Measures
+
+- Implement rate limiting to prevent abuse
+- Add authentication for sensitive endpoints (if required)
+- Implement proper input sanitization to prevent injection attacks
+
+### 2. Front-End Development (HTML/JavaScript)
+
+2.1. Enhance User Interface
+
+- Implement retractable functionality for left nav and explorer panels
+- Improve responsive design for different screen sizes
+- Ensure proper styling and consistent look across all sections
+- Implement smooth transitions for retractable sections
+- Add loading indicators for asynchronous operations
+- Enhance error handling and user feedback mechanism
+
+2.2. Performance Optimization
+
+- Implement lazy loading for large result sets
+- Optimize rendering of large tables
+- Implement caching mechanisms for frequently accessed data
+- Minimize API calls by batching requests where possible
+
+2.3. Accessibility and Usability
+
+- Ensure proper keyboard navigation
+- Implement ARIA attributes for screen reader compatibility
+- Add tooltips and help text for complex features
+- Ensure color contrast meets accessibility standards
+
+2.4. Integration with Backend
+
+- Enhance LMSS download/update functionality
+- Improve integration of text input and document upload with EntityExtractor
+- Refine LMSS class selection filtering
+- Enhance classification results display
+- Improve Explorer search functionality integration
+- Implement real-time updates for LMSS statistics
+
+### 3. Testing and Quality Assurance
+
+3.1. Expand Backend Testing
+
+- Develop comprehensive unit tests for all major components
+- Implement integration tests for the full pipeline
+- Perform stress testing and optimize for large documents and ontologies
+
+3.2. Implement Frontend Testing
+
+- Develop unit tests for front-end components
+- Implement end-to-end tests for user workflows
+- Perform cross-browser testing
+
+3.3. User Acceptance Testing
+
+- Conduct usability testing with potential users
+- Gather and incorporate user feedback
+
+### 4. Documentation and Deployment
+
+4.1. Enhance API Documentation
+
+- Write comprehensive API documentation for all endpoints
+- Include usage examples and best practices
+
+4.2. Create User Guide
+
+- Develop a detailed user guide for the web interface
+- Include screenshots and step-by-step instructions
+
+4.3. Update README.md
+
+- Refine project overview
+- Provide detailed installation and usage instructions
+- Include troubleshooting section
+
+4.4. Refine Docker Deployment
+
+- Optimize Dockerfile for production use
+- Enhance docker-compose.yml for easier deployment and scaling
+
+4.5. Set up CI/CD Pipeline
+
+- Implement continuous integration for automated testing
+- Set up continuous deployment for streamlined updates
+
+### 5. Performance Optimization
+
+5.1. Profile and optimize entity extraction and classification processes
+5.2. Implement caching mechanisms for frequently accessed data
+5.3. Optimize search functionality for large-scale ontologies
+5.4. Implement database solution for storing processed results (if needed)
+
+### 6. Feature Enhancements
+
+6.1. Implement more sophisticated location entity handling in `OntologyClassifier`
+6.2. Enhance confidence scoring mechanisms
+6.3. Develop visualization features for classification results
+6.4. Implement the Q&A Bot functionality in the Explorer panel
+
+### 7. Final Polishing and Open-Source Release
+
+7.1. Refactor code for clarity and maintainability
+7.2. Ensure code comments and docstrings are comprehensive
+7.3. Review and update all documentation
+7.4. Prepare the project for open-source release on GitHub
+7.5. Choose and apply an appropriate open-source license (e.g., MIT License)
+
+## Immediate Focus
+
+1. Enhance error handling and validation in the API
+2. Improve the front-end user interface and responsiveness
+3. Expand the test suite for both backend and frontend components
+4. Optimize performance for large documents and ontologies
+5. Refine and expand project documentation
+
+This updated plan reflects the current state of the SALI-E project and outlines a comprehensive roadmap for future development. It addresses all aspects of the project, including API development, front-end enhancements, testing, documentation, performance optimization, and preparation for open-source release.

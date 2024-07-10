@@ -1,7 +1,7 @@
 .DS_Store
 .env
 test*
-notebook*
+*notebook*
 
 *.json
 *.ttl
@@ -20,7 +20,6 @@ app/lmss_graph.ttl
 app/lmss_index.json
 app/lmss_hash.txt
 
-tests/*
 
 .cursorrules
 .cursorignore

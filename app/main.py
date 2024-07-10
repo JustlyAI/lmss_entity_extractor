@@ -147,7 +147,7 @@ async def process_lmss():
             high_confidence_threshold=0.9,  # Add this line
         )
         searcher = LMSSSearch(
-            INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH, sentence_transformer
+            INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH  # Remove sentence_transformer
         )
 
         lmss_status = "ready"
