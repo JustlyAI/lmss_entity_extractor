@@ -1,18 +1,31 @@
 # SALI-E - Legal Matter Specification Standard Entity Recognizer
 
-![LMSS Entity Recognizer](lmss_entity_recognizer.png)
+![LMSS Entity Recognizer](sali-e-prototype.png)
+
+## Project Overview
+
+SALI-E is a powerful tool designed to apply the Legal Matter Standards Specification (LMSS) ontology to text documents. It uses advanced Natural Language Processing (NLP) and Named-Entity Recognition (NER) techniques to extract and classify relevant legal entities and concepts.
+
+## Features
+
+- LMSS ontology management (download, update, and explore)
+- Document processing (text input and file upload)
+- Entity extraction and classification based on LMSS
+- Interactive LMSS class selection for classification
+- Search functionality within the LMSS ontology
+- User-friendly web interface
 
 ## Quick Start
 
-## Cloning the Repository
-
-To get started with the SALI-E - Legal Matter Specification Standard Entity Recognizer, you need to clone the repository from GitHub. Follow the steps below:
+### Cloning the Repository
 
 1. **Clone the repository**:
 
-   ```bash
-   git clone https://github.com/JustlyAI/lmss_entity_recognizer.git
-   ```
+For the latest version, clone the feature-branch.
+
+```bash
+git clone -b feature-branch https://github.com/JustlyAI/lmss_entity_recognizer.git
+```
 
 2. **Navigate to the project directory**:
 
@@ -28,13 +41,25 @@ To get started with the SALI-E - Legal Matter Specification Standard Entity Reco
    pip install -r requirements.txt
    ```
 
-2. **Run the application**:
+2. **Download required language models**:
+
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
+
+   Optionally, for improved performance:
+
+   ```bash
+   python -m spacy download en_core_web_trf
+   ```
+
+3. **Run the application**:
 
    ```bash
    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
    ```
 
-3. **Access the application**:
+4. **Access the application**:
    Open your browser and go to [http://localhost:8000/](http://localhost:8000/)
 
 ### Running with Docker
@@ -50,8 +75,74 @@ To get started with the SALI-E - Legal Matter Specification Standard Entity Reco
 
 ## Additional Information
 
-- Inspect endpoints at [http://localhost:8000/docs](http://localhost:8000/docs)
-- Ensure you have Docker installed on your machine.
-- For direct running, ensure you have Python and pip installed.
+- API documentation is available at [http://localhost:8000/docs](http://localhost:8000/docs)
+- Ensure you have Docker installed on your machine for containerized deployment.
+- For direct running, ensure you have Python 3.10+ and pip installed.
 
-python -m spacy download en_core_web_sm
+## Project Structure
+
+```
+sali-e/
+├── app/
+│   ├── main.py
+│   ├── lmss_parser.py
+│   ├── lmss_classification.py
+│   ├── lmss_search.py
+│   ├── entity_extraction.py
+│   ├── static/
+│   │   └── js/
+│   │       └── main.js
+│   ├── templates/
+│   │   └── index.html
+│   ├── lmss/
+│   │   ├── LMSS.owl
+│   │   ├── lmss_index.json
+│   │   ├── lmss_graph.ttl
+│   │   ├── lmss_hash.txt
+│   │   ├── top_classes.json
+│   │   └── lmss_stats.json
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+## Usage
+
+1. **LMSS Management**:
+
+   - Use the "Download / Update" button to fetch the latest LMSS ontology.
+   - View LMSS statistics and download the index or graph files.
+
+2. **Document Processing**:
+
+   - Enter text directly or upload a file (.txt, .pdf, .docx) for processing.
+   - Select relevant LMSS classes for classification.
+   - Click "Process Document" to extract and classify entities.
+
+3. **Search and Exploration**:
+
+   - Use the search bar in the Explorer panel to search within the LMSS ontology.
+   - Filter search results by class using the dropdown menu.
+
+4. **Results**:
+   - View classification results in the table format.
+   - Download results as JSON for further analysis.
+
+## Development Notes
+
+- The project uses FastAPI for the backend and vanilla JavaScript for the frontend.
+- Entity extraction utilizes spaCy for NLP tasks.
+- Sentence transformers are used for generating embeddings.
+- The LMSS ontology is parsed and stored using RDFlib.
+
+## Future Enhancements
+
+- Implement visualization features for classification results
+- Enhance performance for large documents and ontologies
+- Add more sophisticated handling for specific entity types (e.g., locations)
+- Develop Q&A Bot functionality in the Explorer panel
+
+## Contributing
+
+This project is currently for internal use. Please contact the project maintainers for information about contributing.

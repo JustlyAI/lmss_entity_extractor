@@ -10,3 +10,9 @@ matplotlib
 
 spacy
 scikit-learn
+fuzzywuzzy
+python-Levenshtein
+nltk
+
+PyPDF2
+python-docx
