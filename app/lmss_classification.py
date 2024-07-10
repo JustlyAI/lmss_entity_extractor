@@ -18,6 +18,7 @@ class OntologyClassifier:
         index_path: str,
         top_classes_path: str,
         similarity_threshold: float = 0.65,
+        high_confidence_threshold: float = 0.9,
     ):
         self.graph = Graph()
         self.graph.parse(graph_path, format="turtle")
@@ -25,6 +26,7 @@ class OntologyClassifier:
         self.top_classes = self._load_top_classes(top_classes_path)
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         self.similarity_threshold = similarity_threshold
+        self.high_confidence_threshold = high_confidence_threshold
         self.LMSS = Namespace("http://lmss.sali.org/")
         logger.info(f"Loaded {len(self.ontology_entities)} ontology entities")
         logger.info(f"Identified {len(self.top_classes)} top classes")
@@ -63,55 +65,37 @@ class OntologyClassifier:
         entity_embedding = np.array(entity["vector"])
         entity_text = entity["text"].lower()
 
-        # Multi-word matching
-        entity_words = entity_text.split()
-        entity_bigrams = [
-            " ".join(entity_words[i : i + 2]) for i in range(len(entity_words) - 1)
-        ]
-        entity_trigrams = [
-            " ".join(entity_words[i : i + 3]) for i in range(len(entity_words) - 2)
-        ]
-
         for ont_entity in self.ontology_entities:
             ont_embedding = self._get_entity_embedding(ont_entity["rdf_about"])
-
             if ont_embedding is not None:
                 semantic_score = self._cosine_similarity(
                     entity_embedding, ont_embedding
                 )
-            else:
-                semantic_score = 0
 
-            label_lower = ont_entity["rdfs_label"].lower()
-            fuzzy_score = max(
-                [
-                    fuzz.token_set_ratio(entity_text, label_lower) / 100,
-                    max(
-                        [
-                            fuzz.partial_ratio(bigram, label_lower) / 100
-                            for bigram in entity_bigrams
-                        ]
-                        or [0]
-                    ),
-                    max(
-                        [
-                            fuzz.partial_ratio(trigram, label_lower) / 100
-                            for trigram in entity_trigrams
-                        ]
-                        or [0]
-                    ),
-                ]
-            )
+                # Fast-path: Check for high-confidence vector match first
+                if semantic_score >= self.high_confidence_threshold:
+                    logger.info(
+                        f"High-confidence match found for '{entity['text']}': {ont_entity['rdfs_label']} (score: {semantic_score:.2f})"
+                    )
+                    return {
+                        "iri": ont_entity["rdf_about"],
+                        "label": ont_entity["rdfs_label"],
+                        "score": semantic_score,
+                    }
 
-            combined_score = (semantic_score + fuzzy_score) / 2
+                # If no high-confidence match, proceed with the existing matching logic
+                label_lower = ont_entity["rdfs_label"].lower()
+                fuzzy_score = fuzz.token_set_ratio(entity_text, label_lower) / 100
 
-            if combined_score > best_score:
-                best_score = combined_score
-                best_match = {
-                    "iri": ont_entity["rdf_about"],
-                    "label": ont_entity["rdfs_label"],
-                    "score": best_score,
-                }
+                combined_score = (semantic_score + fuzzy_score) / 2
+
+                if combined_score > best_score:
+                    best_score = combined_score
+                    best_match = {
+                        "iri": ont_entity["rdf_about"],
+                        "label": ont_entity["rdfs_label"],
+                        "score": best_score,
+                    }
 
         if best_match and best_match["score"] >= self.similarity_threshold:
             logger.info(
@@ -186,7 +170,7 @@ class OntologyClassifier:
         logger.warning(f"No branch found for entity: {entity_iri}")
         return "Unknown"
 
-    def print_ontology_saxqmple(self, n: int = 5):
+    def print_ontology_sample(self, n: int = 5):
         logger.info(f"Sample of {n} ontology entities:")
         for entity in self.ontology_entities[:n]:
             logger.info(f"Label: {entity['rdfs_label']}, IRI: {entity['rdf_about']}")

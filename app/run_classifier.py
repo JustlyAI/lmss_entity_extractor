@@ -28,12 +28,14 @@ def run_classifier():
         logger.warning("No extracted entities found in extraction_results.json")
         return
 
-    # Initialize the matcher with a lower similarity threshold
+    # Initialize the matcher with a lower similarity threshold and high confidence threshold
     try:
         matcher = OntologyClassifier(
             graph_path="app/lmss/lmss_graph.ttl",
             index_path="app/lmss/lmss_index.json",
+            top_classes_path="app/lmss/top_classes.json",  # Add this line
             similarity_threshold=0.3,  # Lower threshold for more matches
+            high_confidence_threshold=0.9,  # Add this line
         )
     except Exception as e:
         logger.error(f"Error initializing OntologyClassifier: {str(e)}")

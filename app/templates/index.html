@@ -12,8 +12,16 @@
             display: flex;
             height: 100vh;
         }
-        #left-nav, #explorer {
-            width: 250px;
+        #left-nav {
+            width: 200px; /* Set left nav width to 200px */
+            background-color: #f0f0f0;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        #explorer {
+            width: 500px; /* Set explorer width to 500px */
             background-color: #f0f0f0;
             padding: 20px;
             height: 100vh;
@@ -94,7 +102,8 @@
     </div>
 
     <div id="main-content">
-        <h2>Classifier</h2>
+        <h2>SALI-E Document Classifier</h2>
+        <h3>Text in, LMSS out</h3>
         <textarea id="text-input" rows="10" cols="50" placeholder="Enter text here..."></textarea>
         <div id="text-input-message"></div>
         <br>
@@ -113,7 +122,7 @@
     </div>
 
     <div id="explorer">
-        <h2>Explorer</h2>
+        <h2>LMSS Explorer</h2>
         <input type="text" id="search-input" placeholder="Key Word Search">
         <select id="class-filter">
             <option value="">All Classes</option>

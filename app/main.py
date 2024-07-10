@@ -101,11 +101,13 @@ def check_lmss_status():
             lmss_parser = OntologyParser(ONTOLOGY_PATH, model=sentence_transformer)
             extractor = EntityExtractor()
             classifier = OntologyClassifier(
-                GRAPH_PATH, INDEX_PATH, TOP_CLASSES_PATH, similarity_threshold=0.7
+                GRAPH_PATH,
+                INDEX_PATH,
+                TOP_CLASSES_PATH,
+                similarity_threshold=0.7,
+                high_confidence_threshold=0.9,  # Add this line
             )
-            searcher = LMSSSearch(
-                INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH
-            )  # Use GRAPH_PATH instead of lmss_parser.graph
+            searcher = LMSSSearch(INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH)
         else:
             lmss_status = "outdated"
     else:
@@ -138,11 +140,15 @@ async def process_lmss():
         # Initialize other components
         extractor = EntityExtractor()
         classifier = OntologyClassifier(
-            GRAPH_PATH, INDEX_PATH, TOP_CLASSES_PATH, similarity_threshold=0.7
+            GRAPH_PATH,
+            INDEX_PATH,
+            TOP_CLASSES_PATH,
+            similarity_threshold=0.7,
+            high_confidence_threshold=0.9,  # Add this line
         )
         searcher = LMSSSearch(
             INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH, sentence_transformer
-        )  # Pass the sentence_transformer instance
+        )
 
         lmss_status = "ready"
         logger.info("LMSS ontology processed successfully.")

@@ -64,7 +64,7 @@ async function fetchLmssStatistics() {
     lmssStatistics.innerHTML = `
         <p>Branches: ${data.branches}</p>
         <p>Classes: ${data.classes}</p>
-        <p>Attributes with embeddings: ${data.attributes_with_embeddings}</p>
+        <p>Embedded Attributes: ${data.attributes_with_embeddings}</p>
     `;
 }
 
@@ -76,18 +76,21 @@ async function fetchLmssClasses() {
     const response = await fetch(`${API_BASE_URL}/lmss/classes`);
     const classes = await response.json();
     
-    const columns = Math.ceil(classes.length / 6);
+    const columns = 3; // Changed from Math.ceil(classes.length / 6) to 3
+    const rowsPerColumn = 8; // New constant for rows per column
     let html = '';
     for (let i = 0; i < columns; i++) {
         html += '<div class="class-column">';
-        for (let j = i * 6; j < Math.min((i + 1) * 6, classes.length); j++) {
+        for (let j = i * rowsPerColumn; j < Math.min((i + 1) * rowsPerColumn, classes.length); j++) {
             const cls = classes[j];
-            html += `
-                <div class="class-item">
-                    <input type="checkbox" name="lmss-class" value="${cls.iri}" checked>
-                    <label>${cls.label} (${cls.entities_count})</label>
-                </div>
-            `;
+            if (cls) { // Add this check to avoid errors if there are fewer classes than expected
+                html += `
+                    <div class="class-item">
+                        <input type="checkbox" name="lmss-class" value="${cls.iri}" checked>
+                        <label>${cls.label} (${cls.entities_count})</label>
+                    </div>
+                `;
+            }
         }
         html += '</div>';
     }
