@@ -138,11 +138,11 @@ async def process_lmss():
         # Initialize other components
         extractor = EntityExtractor()
         classifier = OntologyClassifier(
-            GRAPH_PATH, INDEX_PATH, similarity_threshold=0.7
+            GRAPH_PATH, INDEX_PATH, TOP_CLASSES_PATH, similarity_threshold=0.7
         )
         searcher = LMSSSearch(
-            INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH
-        )  # Use GRAPH_PATH instead of lmss_parser.graph
+            INDEX_PATH, GRAPH_PATH, TOP_CLASSES_PATH, sentence_transformer
+        )  # Pass the sentence_transformer instance
 
         lmss_status = "ready"
         logger.info("LMSS ontology processed successfully.")
@@ -276,8 +276,12 @@ async def search_lmss(query: str, class_filter: Optional[str] = None):
     if lmss_status != "ready":
         raise HTTPException(status_code=400, detail="LMSS is not ready")
     selected_branches = [class_filter] if class_filter else None
-    results = searcher.search(query, selected_branches)
-    return {"results": results}
+    try:
+        results = searcher.search(query, selected_branches)
+        return {"results": results}
+    except Exception as e:
+        logger.error(f"Error during search: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Error during search: {str(e)}")
 
 
 if __name__ == "__main__":

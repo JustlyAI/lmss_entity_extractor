@@ -1,13 +1,13 @@
-from pydantic import BaseModel, Field
 import json
 from typing import List, Dict, Optional, Set
-from fuzzywuzzy import fuzz
 import numpy as np
+from sentence_transformers import SentenceTransformer
+from fuzzywuzzy import fuzz
 from rdflib import Graph, URIRef, Namespace
 from rdflib.namespace import RDFS
+from pydantic import BaseModel, Field
 
 
-# Define Pydantic model for Entity
 class Entity(BaseModel):
     rdf_about: str
     rdfs_label: str
@@ -21,7 +21,6 @@ class Entity(BaseModel):
     embedding: Optional[List[float]] = None
 
 
-# Define Pydantic model for TopClass
 class TopClass(BaseModel):
     iri: str
     label: str
@@ -35,6 +34,7 @@ class LMSSSearch:
         self.graph.parse(graph_path, format="turtle")
         self.top_classes = self._load_json(top_classes_path, is_entity=False)
         self.LMSS = Namespace("http://lmss.sali.org/")
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
     def _load_json(self, path: str, is_entity: bool) -> List[Entity]:
         with open(path, "r") as f:
@@ -45,9 +45,6 @@ class LMSSSearch:
                 return [TopClass(**top_class) for top_class in data]
 
     def _filter_entities(self, selected_branches: List[str]) -> Set[str]:
-        """
-        Filter entities based on selected branches.
-        """
         filtered_entities = set()
         for branch in selected_branches:
             filtered_entities.add(branch)
@@ -55,9 +52,6 @@ class LMSSSearch:
         return filtered_entities
 
     def _get_subclasses(self, class_iri: URIRef) -> Set[str]:
-        """
-        Recursively get all subclasses of a given class.
-        """
         subclasses = set()
         for s, p, o in self.graph.triples((None, RDFS.subClassOf, class_iri)):
             subclasses.add(str(s))
@@ -91,12 +85,6 @@ class LMSSSearch:
 
         return sorted(results, key=lambda x: x["score"], reverse=True)[:10]
 
-    def _is_in_selected_branches(self, iri: str, selected_branches: List[str]) -> bool:
-        for branch in selected_branches:
-            if iri.startswith(branch):
-                return True
-        return False
-
     def _compute_score(
         self,
         query: str,
@@ -104,21 +92,16 @@ class LMSSSearch:
         query_embedding: np.ndarray,
         label_embedding: np.ndarray,
     ) -> float:
-        # Regex match (using fuzzywuzzy's token_set_ratio for flexibility)
         regex_score = fuzz.token_set_ratio(query.lower(), label.lower()) / 100
-
-        # Fuzzy match
         fuzzy_score = fuzz.partial_ratio(query.lower(), label.lower()) / 100
+        vector_score = self._cosine_similarity(query_embedding, label_embedding)
 
-        # Vector similarity
-        vector_score = (
-            self._cosine_similarity(query_embedding, label_embedding)
-            if len(label_embedding) > 0
-            else 0
+        weights = [0.3, 0.3, 0.4]  # Regex, Fuzzy, Vector
+        return (
+            weights[0] * regex_score
+            + weights[1] * fuzzy_score
+            + weights[2] * vector_score
         )
-
-        # Combine scores (you can adjust the weights)
-        return max(regex_score, fuzzy_score, vector_score)
 
     @staticmethod
     def _cosine_similarity(v1: np.ndarray, v2: np.ndarray) -> float:
@@ -126,10 +109,8 @@ class LMSSSearch:
             return 0
         return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
-    def _get_embedding(self, tesxt: str) -> List[float]:
-        # This method would typically use a pre-trained model to get embeddings
-        # For now, we'll return a random vector as a placeholder
-        return np.random.rand(768).tolist()  # 768 is a common embedding size
+    def _get_embedding(self, text: str) -> List[float]:
+        return self.model.encode(text).tolist()
 
     def get_top_classes(self) -> List[TopClass]:
         return self.top_classes
