@@ -27,6 +27,14 @@ For the latest version, clone the feature-branch.
 git clone -b feature-branch https://github.com/JustlyAI/lmss_entity_recognizer.git
 ```
 
+**Option to Download Large Data Files**
+
+To run this application, you’ll need to download LMSS ontology and generate embeddings. To bypass this porcess and download the data assets needed for extraction and classification, follow these steps:
+
+    1.	Visit the latest release on GitHub (https://github.com/JustlyAI/lmss_entity_recognizer/releases/tag/v.0.0.2).
+    2.	Download the large data files provided in the release assets.
+    3.	Place the downloaded files into the lmss folder within the application directory.
+
 2. **Navigate to the project directory**:
 
    ```bash

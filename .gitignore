@@ -12,6 +12,7 @@ od/
 .vscode/
 .pytest_cache/
 *__pycache__/*
+*/__pycache__/*
 
 app/.DS_Store
 app/__pycache__/*

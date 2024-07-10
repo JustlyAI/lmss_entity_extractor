@@ -294,3 +294,31 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+# # Add functionality to download large data files from release
+
+# import os
+# import requests
+
+# # Define the URLs for the data files in the release
+# urls = [
+#     "https://github.com/yourusername/yourrepository/releases/download/v1.0.0/large_data_file1",
+#     "https://github.com/yourusername/yourrepository/releases/download/v1.0.0/large_data_file2"
+# ]
+
+# # Define the local paths where files should be saved
+# local_paths = [
+#     "/path/to/large_data_file1",
+#     "/path/to/large_data_file2"
+# ]
+
+# # Download the files if they do not exist locally
+# for url, local_path in zip(urls, local_paths):
+#     if not os.path.exists(local_path):
+#         print(f"Downloading {url} to {local_path}")
+#         response = requests.get(url)
+#         with open(local_path, 'wb') as f:
+#             f.write(response.content)
+#     else:
+#         print(f"{local_path} already exists")
