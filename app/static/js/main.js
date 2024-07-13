@@ -183,18 +183,34 @@ function displayResults(results) {
 async function searchLmss() {
     const query = searchInput.value;
     const classFilterValue = classFilter.value;
-    const response = await fetch(`${API_BASE_URL}/search?query=${query}&class_filter=${classFilterValue}`);
-    const data = await response.json();
-    displaySearchResults(data.results);
+    const top_k = 10; // You can adjust this value or make it configurable
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/search?query=${query}&class_filter=${classFilterValue}&top_k=${top_k}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displaySearchResults(data.results);
+    } catch (error) {
+        console.error('Error during search:', error);
+        searchResults.innerHTML = `<p>Error during search: ${error.message}</p>`;
+    }
 }
 
 function displaySearchResults(results) {
+    if (!Array.isArray(results) || results.length === 0) {
+        searchResults.innerHTML = '<p>No results found</p>';
+        return;
+    }
+
     searchResults.innerHTML = `
         <table>
             <tr>
                 <th>Branch</th>
                 <th>Label</th>
                 <th>Score</th>
+                <th>Match Type</th>
                 <th>IRI</th>
             </tr>
             ${results.map(result => `
@@ -202,6 +218,7 @@ function displaySearchResults(results) {
                     <td>${result.branch || ''}</td>
                     <td>${result.label}</td>
                     <td>${result.score.toFixed(2)}</td>
+                    <td>${result.match_type}</td>
                     <td>${result.iri}</td>
                 </tr>
             `).join('')}

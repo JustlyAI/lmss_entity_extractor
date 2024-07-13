@@ -1,0 +1,43 @@
+lmss:R00F5f755285b32B5cd55ac8 a owl:Class ;
+    rdfs:label "United States dollar" ;
+    lmss:hasEmbedding [ lmss:embeddingField "skos_prefLabel" ;
+            lmss:embeddingValue "[...]" ],
+        [ lmss:embeddingField "skos_altLabel" ;
+            lmss:embeddingValue "[...]" ],
+        [ lmss:embeddingField "skos_definition" ;
+            lmss:embeddingValue "[...]" ],
+        [ lmss:embeddingField "rdfs_label" ;
+            lmss:embeddingValue "[...]" ] ;
+    lmss:legacyIdentifier "http://code.sali.org/v1/LMSS/#USD" ;
+    dc:identifier "USD" ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:R7C5f715CD204F4Fc3509b8c ],
+        [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:R1E70ce4D699e90144cB32b8 ],
+        [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:RECB72a23Da942160565E19e ],
+        [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:R8DD1ec7EC44fF289750Ff77 ],
+        [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:R662924F091d872F0fa9B34f ],
+        [ a owl:Restriction ;
+            owl:onProperty lmss:RCuyvwwZzhCRHWEZZVIlpHF ;
+            owl:someValuesFrom lmss:RCEE791AF6ea7152aafAA688 ],
+        lmss:R767niCLQVC5zIcO5WDQMSl ;
+    skos:altLabel "United States dollar",
+        "dólar estadounidense",
+        "דולר אמריקאי",
+        "यूनाइटेड स्टेट्स डॉलर",
+        "United States dollar"@en-gb,
+        "dólar estadounidense"@es-es,
+        "dólar estadounidense"@es-mx,
+        "דולר אמריקאי"@he-il,
+        "यूनाइटेड स्टेट्स डॉलर"@hi-in ;
+    skos:definition "Locations used: United States, American Samoa(AS), Barbados(BB) (as well as Barbados Dollar), Bermuda(BM) (as well as Bermudian Dollar), British Indian Ocean Territory(IO) (also uses GBP), British Virgin Islands(VG), Caribbean Netherlands(BQ Bonaire, Sint" ;
+    skos:hiddenLabel "USD" ;
+    skos:prefLabel "United States dollar" .

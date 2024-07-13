@@ -60,6 +60,14 @@ class OntologyParser:
                         "skos_prefLabel": self.get_literal(s, SKOS.prefLabel),
                         "subClassOf": self.get_literals(s, RDFS.subClassOf),
                     }
+
+                    # Add skos:altLabel and skos:prefLabel to the graph
+                    for alt_label in self.get_literals(s, SKOS.altLabel):
+                        self.graph.add((s, SKOS.altLabel, Literal(alt_label)))
+                    pref_label = self.get_literal(s, SKOS.prefLabel)
+                    if pref_label:
+                        self.graph.add((s, SKOS.prefLabel, Literal(pref_label)))
+
         self.logger.info(f"Parsed {len(self.entities)} entities.")
 
     def get_literal(self, s: URIRef, p: URIRef) -> str:
@@ -121,6 +129,7 @@ class OntologyParser:
                 "skos_definition",
                 "skos_prefLabel",
                 "skos_altLabel",
+                "skos_example",  # Added skos:example
             ]:
                 text = entity.get(field, "")
                 if isinstance(text, list):
