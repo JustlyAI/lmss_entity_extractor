@@ -1,15 +1,26 @@
+.DS_Store
 .env
 test*
-notebook*
+*notebook*
+
+*.json
+*.ttl
 
 ignore/
+od/
 
 .vscode/
 .pytest_cache/
 *__pycache__/*
+*/__pycache__/*
 
+app/.DS_Store
 app/__pycache__/*
 app/LMSS.owl
+app/lmss_graph.ttl 
+app/lmss_index.json
+app/lmss_hash.txt
+
 
 .cursorrules
 .cursorignore

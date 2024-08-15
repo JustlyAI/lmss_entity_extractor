@@ -3,34 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALI-E - Legal Matter Specification Standard Entity Recognizer</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>LMSS Entity Recognizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #left-nav {
+            width: 200px; /* Set left nav width to 200px */
+            background-color: #f0f0f0;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        #explorer {
+            width: 500px; /* Set explorer width to 500px */
+            background-color: #f0f0f0;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .hidden {
+            display: none;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        textarea, input[type="file"], button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #results-table {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #lmss-class-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .class-column {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        .class-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .class-item input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        #class-selection-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        #text-input-message, #file-upload-message {
+            margin-top: 5px;
+            color: green;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-6 text-center">SALI-E - Legal Matter Specification Standard Entity Recognizer</h1>
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2">Text</h2>
-            <textarea id="input-text" class="w-full h-32 p-2 border rounded" placeholder="Enter your text here..."></textarea>
-            <button id="submit-btn" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
-        </div>
-        <div>
-            <h2 class="text-xl font-semibold mb-2">Recognized Entities</h2>
-            <table id="output-table" class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border p-2">Start</th>
-                        <th class="border p-2">End</th>
-                        <th class="border p-2">Text</th>
-                        <th class="border p-2">Entity</th>
-                        <th class="border p-2">IRI</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+<body>
+    <div id="left-nav">
+        <h2>Legal Matter Specification Standard</h2>
+        <div id="lmss-status"></div>
+        <button id="update-lmss">Download / Update</button>
+        <div id="lmss-progress" class="hidden">Preparing LMSS...</div>
+        <div id="lmss-statistics"></div>
+        <button id="download-index" disabled>Download Index</button>
+        <button id="download-graph" disabled>Download Graph</button>
     </div>
-    <script src="{{ url_for('static', path='/js/main.js') }}"></script>
+
+    <div id="main-content">
+        <h2>SALI-E Document Classifier</h2>
+        <h3>Text in, LMSS out</h3>
+        <textarea id="text-input" rows="10" cols="50" placeholder="Enter text here..."></textarea>
+        <div id="text-input-message"></div>
+        <br>
+        <input type="file" id="file-input" accept=".txt,.pdf,.doc,.docx">
+        <span id="file-upload-message"></span>
+        <br>
+        <button id="process-document" disabled>Process Document</button>
+        <br>
+        <div id="class-selection-controls">
+            <button id="select-all-classes">Select All</button>
+            <button id="clear-all-classes">Clear All</button>
+        </div>
+        <div id="lmss-class-selection"></div>
+        <div id="results-table"></div>
+        <button id="download-json" class="hidden">Download JSON</button>
+    </div>
+
+    <div id="explorer">
+        <h2>LMSS Explorer</h2>
+        <input type="text" id="search-input" placeholder="Key Word Search">
+        <select id="class-filter">
+            <option value="">All Classes</option>
+        </select>
+        <div id="search-results"></div>
+        <div id="qa-bot-placeholder">Future home of Q&A Bot</div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
