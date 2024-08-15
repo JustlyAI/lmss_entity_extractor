@@ -1,4 +1,4 @@
-# SALI-E - Legal Matter Specification Standard Entity Recognizer
+# SALI-E - Legal Matter Specification Standard Entity Extractor
 
 ![LMSS Entity Recognizer](sali-e-prototype.png)
 
